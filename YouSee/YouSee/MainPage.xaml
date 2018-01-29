@@ -4,8 +4,19 @@
              xmlns:local="clr-namespace:YouSee"
              x:Class="YouSee.MainPage">
 
-	<Label Text="Welcome to Xamarin.Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3.333*"></RowDefinition>
+            <RowDefinition Height="3.333*"></RowDefinition>
+            <RowDefinition Height="3.333*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackLayout Grid.Row="1">
+            <Label x:Name="txtLat" Text="Latitude: "></Label>
+            <Label x:Name="txtLong" Text="Longitude: "></Label>
+            <Button x:Name="btnGetLocation" Text="Get Lat/Long"></Button>
+        </StackLayout>
+        
+    </Grid>
 
 </ContentPage>
