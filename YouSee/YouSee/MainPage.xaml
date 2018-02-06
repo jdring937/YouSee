@@ -4,19 +4,26 @@
              xmlns:local="clr-namespace:YouSee"
              x:Class="YouSee.MainPage">
 
-    <Grid>
+    <Grid x:Name="grdButtonGrid">
+        <!-- Set up grid rows -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="3.333*"></RowDefinition>
-            <RowDefinition Height="3.333*"></RowDefinition>
-            <RowDefinition Height="3.333*"></RowDefinition>
+            <RowDefinition Height="0*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3.333*"/>
         </Grid.RowDefinitions>
 
-        <StackLayout Grid.Row="1">
-            <Label x:Name="txtLat" Text="Latitude: "></Label>
-            <Label x:Name="txtLong" Text="Longitude: "></Label>
-            <Button x:Name="btnGetLocation" Text="Get Lat/Long"></Button>
-        </StackLayout>
-        
+        <!-- Set up grid columns-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".75*" />
+            <ColumnDefinition Width=".75*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- For full screen button -->
+        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Text="▼" BackgroundColor="#ffc32b"></Button>
+
+        <!-- For half screen buttons -->
+        <Button x:Name="btnCreate" Grid.Column="0" Grid.Row="3" Text="Create" BackgroundColor="#ff3321"></Button>
+        <Button x:Name="btnJoin" Grid.Column="1" Grid.Row="3" Text="Join" BackgroundColor="#ff3321"></Button>
     </Grid>
 
 </ContentPage>
