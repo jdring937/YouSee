@@ -33,6 +33,7 @@ namespace YouSee
                 string content = streamReader.ReadToEnd();
                 System.Diagnostics.Debug.WriteLine(content);
             }
+            App.Current.MainPage = new MainPage();
         }
     }
 }
