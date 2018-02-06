@@ -13,13 +13,17 @@ namespace YouSee
 		{
 			InitializeComponent();
 
+<<<<<<< HEAD
 			MainPage = new YouSee.MainPage();
             
+=======
+			MainPage = new YouSee.NameScreen();
+>>>>>>> master
 		}
 
 		protected override void OnStart ()
 		{
-			// Handle when your app starts
+            // Handle when your app starts
 		}
 
 		protected override void OnSleep ()
