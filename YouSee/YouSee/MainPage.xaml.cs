@@ -21,20 +21,8 @@ namespace YouSee
 
         private async void BtnGetLocation_Clicked(object sender, EventArgs e)
         {
-            await RetrieveLocation();
         }
 
-        private async Task RetrieveLocation()
-        {
-            var locator = CrossGeolocator.Current;
-            locator.DesiredAccuracy = 20;
-            TimeSpan span = new TimeSpan(0, 0, 0, 0, 60000);
-            var position = await locator.GetPositionAsync(timeout: span);
-
-            txtLat.Text = "Latitude: " + position.Latitude.ToString();
-            txtLong.Text = "Longitude: " + position.Longitude.ToString();
-
-
-        }
+        
     }
 }
