@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Java.Util;
 
 namespace YouSee.Droid
 {
@@ -22,6 +23,7 @@ namespace YouSee.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
             global::Xamarin.FormsMaps.Init(this, bundle);
             LoadApplication(new App());
+            
         }
     }
 }

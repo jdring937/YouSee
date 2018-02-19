@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YouSee.MenuPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <ScrollView>
+            <Grid x:Name="navMenuGrid">
+                <Grid.RowDefinitions>
+                <RowDefinition Height="3.333*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".25*"></ColumnDefinition>
+                    <ColumnDefinition Width=".75*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <!-- Grid goes inside first grid in top right corner -->
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <BoxView Grid.Row="0" Grid.Column="0" Color="Blue" Grid.ColumnSpan="2"></BoxView>
+                        <BoxView Grid.Row="1" Grid.Column="1" Color="Red"></BoxView>
+                        <BoxView Grid.Row="1" Grid.Column="0" Color="Red"></BoxView>
+                        <Button x:Name="btnCreateSm" Grid.Row="1" Grid.Column="0" Text="Create" BackgroundColor="White"></Button>
+                        <Button x:Name="btnJoinSm" Grid.Row="1" Grid.Column="1" Text="Join" BackgroundColor="White"></Button>
+                    </Grid>
+
+                <!--<BoxView Grid.Row="0" Grid.Column="1" Color="Red"></BoxView>-->
+                <BoxView Grid.Row="1" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="2" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="3" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="4" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="5" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="6" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="7" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="8" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="9" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="10" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="11" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="12" Grid.Column="1" Color="Red"></BoxView>
+                <BoxView Grid.Row="0" Grid.Column="0" Color="Green"></BoxView>
+                <BoxView Grid.Row="1" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="2" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="3" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="4" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="5" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="6" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="7" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="8" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="9" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="10" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="11" Grid.Column="0" Color="Yellow"></BoxView>
+                <BoxView Grid.Row="12" Grid.Column="0" Color="Yellow"></BoxView>
+
+                </Grid>
+            </ScrollView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
