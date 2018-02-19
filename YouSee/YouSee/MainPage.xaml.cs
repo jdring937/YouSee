@@ -1,5 +1,8 @@
 ﻿//YT GeoLocation tutorial: https://www.youtube.com/watch?v=pH1WaO-5LDk
 //Drawing lines between two points: https://stackoverflow.com/questions/13433648/draw-a-line-between-two-point-on-a-google-map-using-jquery
+//MS SQL nuget https://www.nuget.org/packages/System.Data.SqlClient/
+//CustomMap/Map Pin https://developer.xamarin.com/guides/xamarin-forms/application-fundamentals/custom-renderer/map/customized-pin/
+
 
 using System;
 using System.Collections.Generic;
@@ -10,100 +13,68 @@ using Xamarin.Forms;
 using Plugin.Geolocator;
 using Xamarin.Forms.Maps;
 using System.Diagnostics;
+using System.Data;
+using Java.Util;
+using System.Net;
+using System.Net.Sockets;
+using System.Data.SqlClient;
 
 namespace YouSee
 {
     public partial class MainPage : ContentPage
     {
-        Map map;
+        //Map map;
+        CustomMap customMap;
         double lat;
         double lng;
 
         public MainPage()
         {
             InitializeComponent();
-            btnCreate.Clicked += BtnGetLocation_Clicked;
-            //RetrieveLocation();
+            btnCreate.TextColor = Color.White;
+            btnJoin.TextColor = Color.White;
+            btnCreate.Clicked += BtnCreate_Clicked;
             GetLocationOnLoad();
 
-            map = new Map
+            //Retrieves the value of the saved username
+            //if (Application.Current.Properties.ContainsKey("savedPropA"))
+            //{
+            //    String s = Convert.ToString(Application.Current.Properties["savedUserName"]);
+            //}
+
+            //Create map object
+            //map = new Map
+            //{
+            //    HeightRequest = 100,
+            //    WidthRequest = 960,
+            //    VerticalOptions = LayoutOptions.FillAndExpand
+            //};
+
+            customMap = new CustomMap
             {
-                //IsShowingUser = true,
-                HeightRequest = 100,
-                WidthRequest = 960,
-                VerticalOptions = LayoutOptions.FillAndExpand
+                MapType = MapType.Street,
+                WidthRequest = App.ScreenWidth,
+                HeightRequest = App.ScreenHeight
             };
-
-            // You can use MapSpan.FromCenterAndRadius 
-            //map.MoveToRegion (MapSpan.FromCenterAndRadius (new Position (37, -122), Distance.FromMiles (0.3)));
-            // or create a new MapSpan object directly
-            map.MoveToRegion(new MapSpan(new Position(0, 0), 360, 360));
-
 
             // put the page together
-            grdButtonGrid.Children.Add(map, 0, 2);
-            Grid.SetColumnSpan(map, 2);
-
-            // for debugging output only
-            map.PropertyChanged += (sender, e) => {
-                Debug.WriteLine(e.PropertyName + " just changed!");
-                if (e.PropertyName == "VisibleRegion" && map.VisibleRegion != null)
-                    CalculateBoundingCoordinates(map.VisibleRegion);
-            };
-
-            //Create pin for current location
-            var pin = new Pin()
-            {
-                Position = new Position(lat, lng),
-                Label = "My Position!"
-            };
-
-            //map.Pins.Add(pin);
-
-            //Center map on current location
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.0)));
-
+            //grdButtonGrid.Children.Add(map, 0, 2);
+            //Grid.SetColumnSpan(map, 2);
+            grdButtonGrid.Children.Add(customMap, 0, 2);
+            Grid.SetColumnSpan(customMap, 2);
         }
 
-        /// <summary>
-        /// In response to this forum question http://forums.xamarin.com/discussion/22493/maps-visibleregion-bounds
-        /// Useful if you need to send the bounds to a web service or otherwise calculate what
-        /// pins might need to be drawn inside the currently visible viewport.
-        /// </summary>
-        static void CalculateBoundingCoordinates(MapSpan region)
-        {
-            // WARNING: I haven't tested the correctness of this exhaustively!
-            var center = region.Center;
-            var halfheightDegrees = region.LatitudeDegrees / 2;
-            var halfwidthDegrees = region.LongitudeDegrees / 2;
-
-            var left = center.Longitude - halfwidthDegrees;
-            var right = center.Longitude + halfwidthDegrees;
-            var top = center.Latitude + halfheightDegrees;
-            var bottom = center.Latitude - halfheightDegrees;
-
-            // Adjust for Internation Date Line (+/- 180 degrees longitude)
-            if (left < -180) left = 180 + (180 + left);
-            if (right > 180) right = (right - 180) - 180;
-            // I don't wrap around north or south; I don't think the map control allows this anyway
-
-            Debug.WriteLine("Bounding box:");
-            Debug.WriteLine("                    " + top);
-            Debug.WriteLine("  " + left + "                " + right);
-            Debug.WriteLine("                    " + bottom);
-        }
-
-
-        private async void BtnGetLocation_Clicked(object sender, EventArgs e)
+        //Testing purposes only... Change this to actual button click event
+        private async void BtnCreate_Clicked(object sender, EventArgs e)
         {
             await RetrieveLocation();
         }
 
+        //Await method to get location when page loads
         private async void GetLocationOnLoad()
         {
             await RetrieveLocation();
         }
-
 
         //Get the users location
         private async Task RetrieveLocation()
@@ -123,22 +94,67 @@ namespace YouSee
                 Label = "My Position!"
             };
 
-            map.Pins.Add(pin);
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.3)));
-        }        
+            var customPin = new CustomPin
+            {
+                Type = PinType.Place,
+                Position = new Position(lat, lng),
+                Label = "My Postition!",               
+                Id = "Xamarin",
+                Url = "homepages.uc.edu/~ringjy"
+            };
+
+            //map.Pins.Add(pin);
+            customMap.Pins.Add(customPin);
+
+
+            // You can use MapSpan.FromCenterAndRadius 
+            //map.MoveToRegion (MapSpan.FromCenterAndRadius (new Position (37, -122), Distance.FromMiles (0.3)));
+            // or create a new MapSpan object directly
+
+            //map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.1)));
+            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.1)));
+
+        }//Retrieve Location
+
+
+        //Create new Random String
+        //https://stackoverflow.com/questions/1344221/how-can-i-generate-random-alphanumeric-strings-in-c
+        private static System.Random random = new System.Random();
+        public static string RandomString()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var stringChars = new char[8];
+            var random = new System.Random();
+
+            //Create the initial group code
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];               
+            }
+
+            var finalString = new String(stringChars);
+
+            //if the group code exists, create a new group code
+            while(NetworkUtils.searchDBForRandom(finalString) > 0)
+            {
+                for (int i = 0; i < stringChars.Length; i++)
+                {
+                    stringChars[i] = chars[random.Next(chars.Length)];
+
+                }
+                finalString = new string(stringChars);
+            }
+            return finalString;
+        }//RandomString
+
+
+        //TODO Implement multithreaded client/server
+        //https://www.youtube.com/watch?v=BvRJIYDu7wo -> creates chat
+
+        //xTODO Implement hamburger menu on mainPage
+        //https://wolfprogrammer.com/2016/09/02/creating-a-hamburger-menu-in-xamarin-forms/
+
+        //xTODO: Get the userID when the user inserts their username
+        //https://stackoverflow.com/questions/5228780/how-to-get-last-inserted-id
     }
 }
-
-
-
-//buttonBasicMap.Clicked += (_, e) => Navigation.PushAsync(new BasicMapPage());
-//            buttonCamera.Clicked += (_, e) => Navigation.PushAsync(new CameraPage());
-//            buttonPins.Clicked += (_, e) => Navigation.PushAsync(new PinsPage());
-//            buttonShapes.Clicked += (_, e) => Navigation.PushAsync(new ShapesPage());
-//            buttonShapes2.Clicked += (_, e) => Navigation.PushAsync(new Shapes2Page());
-//            buttonTiles.Clicked += (_, e) => Navigation.PushAsync(new TilesPage());
-//            buttonCustomPins.Clicked += (_, e) => Navigation.PushAsync(new CustomPinsPage());
-//            buttonShapesWithInitialize.Clicked += (_, e) => Navigation.PushAsync(new ShapesWithInitializePage());
-//            buttonBindingPin.Clicked += (_, e) => Navigation.PushAsync(new BindingPinViewPage());
-//            buttonGroundOverlays.Clicked += (_, e) => Navigation.PushAsync(new GroundOverlaysPage());
-//            buttonMapStyles.Clicked += (_, e) => Navigation.PushAsync(new MapStylePage());
