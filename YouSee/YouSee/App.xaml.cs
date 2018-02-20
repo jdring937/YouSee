@@ -9,7 +9,7 @@ namespace YouSee
 {
 	public partial class App : Application
 	{
-        //Add a reference to any page you want to have a hamburger menu
+        //Add a reference to any page you want to have a hamburger menu... lookk at createHamburgerIcon() for demo
         public static NavigationPage navigationPage { get; set; }
         public static double ScreenWidth { get; internal set; }
         public static double ScreenHeight { get; internal set; }
@@ -50,7 +50,7 @@ namespace YouSee
         {
             Type t = Type.GetType("MenuPage");
             var menuPage = new MenuPage();
-            //This line determines the page that will be opened with hamburger menu (Change 'MainPge()' to whatever page you want)
+            //This line determines the page that will be opened with hamburger menu (Change 'MainPge' to whatever page you want)
             navigationPage = new NavigationPage(new MainPage{ Title = Application.Current.Properties["savedUserName"].ToString() }); //Displays username next to icon
             navigationPage.BarBackgroundColor = Color.Red;
             navigationPage.BackgroundColor = Color.Black;

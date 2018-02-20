@@ -36,7 +36,7 @@ namespace YouSee
             btnCreate.Clicked += BtnCreate_Clicked;
             GetLocationOnLoad();
 
-            //Retrieves the value of the saved username
+            //Retrieves the value of the saved username.. This is for demonstration purposes
             //if (Application.Current.Properties.ContainsKey("savedPropA"))
             //{
             //    String s = Convert.ToString(Application.Current.Properties["savedUserName"]);
