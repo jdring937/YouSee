@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YouSee.HostPage">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3.333*"></RowDefinition>
+            <RowDefinition Height="3.333*"></RowDefinition>
+            <RowDefinition Height="3.333*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackLayout Spacing="20" Padding="20" VerticalOptions="Center">
+            <Button x:Name="btnHost" Text="Create a Group"></Button>
+            <Entry x:Name="entryGroupName" Placeholder="Group Name" ></Entry>
+        </StackLayout>
+
+    </Grid>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
