@@ -14,7 +14,6 @@ using Plugin.Geolocator;
 using Xamarin.Forms.Maps;
 using System.Diagnostics;
 using System.Data;
-using Java.Util;
 using System.Net;
 using System.Net.Sockets;
 using System.Data.SqlClient;
