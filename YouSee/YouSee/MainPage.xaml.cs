@@ -30,6 +30,7 @@ namespace YouSee
         {
             InitializeComponent();
             btnCreate.Clicked += BtnCreate_Clicked;
+            btnJoin.Clicked += BtnJoin_Clicked;
             AddPinsToMap();
             InitTimer();
 
@@ -116,6 +117,11 @@ namespace YouSee
         private void BtnCreate_Clicked(object sender, EventArgs e)
         {
             App.Current.MainPage = new CreatePage();
+        }
+
+        private void BtnJoin_Clicked(object sender, EventArgs e)
+        {
+            App.Current.MainPage = new ListViewPageJoin();
         }
 
         //Await location when page loads and add pin to mark location
