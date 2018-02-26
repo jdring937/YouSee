@@ -17,6 +17,13 @@ namespace YouSee
 		{
             Title = "Menu";
             InitializeComponent ();
-		}
-	}
+            btnJoinSm.Clicked += btnJoinSm_Clicked;
+
+        }
+
+        private void btnJoinSm_Clicked(object sender, EventArgs e)
+        {
+            App.Current.MainPage = new ListViewPageJoin();
+        }
+    }
 }

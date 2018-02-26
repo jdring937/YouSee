@@ -33,6 +33,7 @@ namespace YouSee
             btnCreate.TextColor = Color.White;
             btnJoin.TextColor = Color.White;
             btnCreate.Clicked += BtnCreate_Clicked;
+            btnJoin.Clicked += btnJoin_Clicked;
             GetLocationOnLoad();
 
             //Retrieves the value of the saved username
@@ -114,6 +115,12 @@ namespace YouSee
             customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.1)));
 
         }//Retrieve Location
+
+        private void btnJoin_Clicked(object sender, EventArgs e)
+        {
+            App.Current.MainPage = new ListViewPageJoin();
+        }
+
 
 
         //Create new Random String
