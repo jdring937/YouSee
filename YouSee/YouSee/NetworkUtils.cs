@@ -69,9 +69,61 @@ namespace YouSee
             {
                 Console.WriteLine(ex.Message);
             }
-
+            App.Current.Properties.Add("savedUserID", userID);
             return userID;
         }//end InsertDB
+
+
+        //Insert new users into DB
+        public static int insertGroup(String groupName, String groupCode, int hostID)
+        {
+            int groupID = 0;
+            String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    String spName = "spInsertGroup";
+                    String passGroupCode = "@GroupCode";
+                    String passGroupName = "@GroupName";
+                    String passHostID = "@HostID";
+                    String passiGroupID = "@iGroupID";
+
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandText = spName;
+                        command.Parameters.Add(new SqlParameter(passGroupName, groupName));
+                        command.Parameters.Add(new SqlParameter(passGroupCode, groupCode));
+                        command.Parameters.Add(new SqlParameter(passHostID, hostID));
+                        command.Parameters.Add(new SqlParameter(passiGroupID, 0));
+
+                        sqlConn.Open();
+                        try
+                        {
+                            //Executes the stored procedure and returns the userID
+                            groupID = (int)command.ExecuteScalar();
+                        }
+                        catch (Exception exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                        }
+                        finally
+                        {
+                            sqlConn.Close();
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return groupID;
+        }//end InsertDB
+
 
 
         //Check to see if the random group code is already in the DB
