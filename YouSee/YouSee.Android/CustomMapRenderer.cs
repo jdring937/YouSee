@@ -15,6 +15,7 @@ using Android.Runtime;
 [assembly: ExportRenderer(typeof(CustomMap), typeof(CustomMapRenderer))]
 namespace YouSee.Droid
 {
+#pragma warning disable CS0618 // Type or member is obsolete
     public class CustomMapRenderer : MapRenderer, GoogleMap.IInfoWindowAdapter
     {
         List<CustomPin> customPins;
@@ -43,7 +44,6 @@ namespace YouSee.Droid
             marker.SetTitle(pin.Label);
             marker.SetSnippet(pin.Address);
             marker.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.pin));
-            marker.SetTitle("Title");
             
             return marker;
         }
@@ -88,6 +88,7 @@ namespace YouSee.Droid
             throw new NotImplementedException();
         }
     }
+#pragma warning restore CS0618 // Type or member is obsolete
 
 }
 

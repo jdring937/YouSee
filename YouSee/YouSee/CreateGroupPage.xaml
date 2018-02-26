@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YouSee.CreatePage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Group Name"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Entry x:Name="txtGroupName" Placeholder="GroupName"></Entry>
+            <Button x:Name="btnCreateGroup" Text="Create!"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

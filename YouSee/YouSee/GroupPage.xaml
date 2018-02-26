@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YouSee.GroupPage">
+    <ContentPage.Content>
+        <Grid x:Name="grdMapGrid" RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.5*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <!--<BoxView Color="Red" Grid.Row="0"></BoxView>-->
+
+            <ScrollView Grid.Row="1">
+                <Grid x:Name="grdMembersGrid" RowSpacing="0" BackgroundColor="Black">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="55"></RowDefinition>
+                        <RowDefinition Height="55"></RowDefinition>
+                        <!--<RowDefinition Height="55"></RowDefinition>
+                        <RowDefinition Height="55"></RowDefinition>
+                        <RowDefinition Height="55"></RowDefinition>
+                        <RowDefinition Height="55"></RowDefinition>
+                        <RowDefinition Height="55"></RowDefinition>-->
+                    </Grid.RowDefinitions>
+                    <Button x:Name="btnInvite" Text="Invite to group" TextColor="Red" BackgroundColor="White" Grid.Row="0"></Button>
+                    <!--<BoxView Color="Black" Grid.Row="0"></BoxView>-->
+                    <!--<BoxView Color="Red" Grid.Row="1"></BoxView>
+                    <BoxView WidthRequest="1" BackgroundColor="Black" Grid.Row="2"></BoxView>
+                    <BoxView Color="Red" Grid.Row="2"></BoxView>
+                    <BoxView Color="Pink" Grid.Row="3"></BoxView>
+                    <BoxView Color="Teal" Grid.Row="4"></BoxView>
+                    <BoxView Color="Gray" Grid.Row="5"></BoxView>
+                    <BoxView Color="Yellow" Grid.Row="6"></BoxView>-->
+                </Grid>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

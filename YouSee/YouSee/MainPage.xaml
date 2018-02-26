@@ -11,12 +11,12 @@
     </ContentPage.Content>
 
 
-    <Grid x:Name="grdButtonGrid">
+    <Grid x:Name="grdButtonGrid" ColumnSpacing="-5" RowSpacing="-2">
         <!-- Set up grid rows -->
         <Grid.RowDefinitions>
             <RowDefinition Height="0*" />
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3.333*"/>
+            <RowDefinition Height="4.333*"/>
         </Grid.RowDefinitions>
 
         <!-- Set up grid columns-->
@@ -30,8 +30,8 @@
         <!--<Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Text="▼" BackgroundColor="#ffc32b"></Button>-->
 
         <!-- For half screen buttons -->
-        <Button x:Name="btnCreate" Grid.Column="0" Grid.Row="3" Text="Create" BackgroundColor="Red"></Button>
-        <Button x:Name="btnJoin" Grid.Column="1" Grid.Row="3" Text="Join" BackgroundColor="Red"></Button>
+        <Button x:Name="btnCreate" Grid.Column="0" Grid.Row="3" Text="Create" TextColor="White" BackgroundColor="Red"></Button>
+        <Button x:Name="btnJoin" Grid.Column="1" Grid.Row="3" Text="Join" TextColor="White" BackgroundColor="Red"></Button>
     </Grid>
     <!--Fills whole page with button (Might be useful for putting map behind other controls)-->
     <!--<Button Text="test"></Button>-->
