@@ -3,7 +3,6 @@
 //MS SQL nuget https://www.nuget.org/packages/System.Data.SqlClient/
 //CustomMap/Map Pin https://developer.xamarin.com/guides/xamarin-forms/application-fundamentals/custom-renderer/map/customized-pin/
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +30,9 @@ namespace YouSee
         {
             InitializeComponent();
             btnCreate.Clicked += BtnCreate_Clicked;
+            btnJoin.Clicked += BtnJoin_Clicked;
             AddPinsToMap();
-            InitTimer();          
+            InitTimer();
 
             customMap = new CustomMap
             {
@@ -70,12 +70,12 @@ namespace YouSee
                 },
                 ColumnSpacing = -5,
                 RowSpacing = -5
-                
+
             };
             mapTypeGrid.Children.Add(street, 0, 0);
             mapTypeGrid.Children.Add(hybrid, 1, 0);
             mapTypeGrid.Children.Add(satellite, 2, 0);
-            
+
             // put the page together
             grdButtonGrid.Children.Add(customMap, 0, 2);
             Grid.SetColumnSpan(customMap, 2);
@@ -119,6 +119,11 @@ namespace YouSee
             App.Current.MainPage = new CreatePage();
         }
 
+        private void BtnJoin_Clicked(object sender, EventArgs e)
+        {
+            App.Current.MainPage = new ListViewPageJoin();
+        }
+
         //Await location when page loads and add pin to mark location
         private async void AddPinsToMap()
         {
@@ -138,7 +143,6 @@ namespace YouSee
             //Add pin to map
             customMap.Pins.Clear();
             customMap.Pins.Add(customPin);
-
 
             //Center map on user/pin location
             customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(MapUtils.getLat(), MapUtils.getLng()), Distance.FromMiles(0.1)));
