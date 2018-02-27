@@ -139,7 +139,6 @@ namespace YouSee
             customMap.Pins.Clear();
             customMap.Pins.Add(customPin);
 
-
             //Center map on user/pin location
             customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(MapUtils.getLat(), MapUtils.getLng()), Distance.FromMiles(0.1)));
 

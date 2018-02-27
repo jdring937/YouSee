@@ -3,77 +3,46 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="YouSee.MenuPage">
     <ContentPage.Content>
-        <StackLayout>
-            <ScrollView>
-            <Grid x:Name="navMenuGrid">
+
+        <ScrollView>
+            <!-- Main grid that contains sub grids -->
+            <Grid x:Name="grdNavMenu" RowSpacing="0">
                 <Grid.RowDefinitions>
-                <RowDefinition Height="3.333*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+                    <RowDefinition Height="150"></RowDefinition> <!--- Row for header info -->
+                    <RowDefinition Height="55"></RowDefinition> <!---Row for buttons grid -->
+                    <RowDefinition Height="1"></RowDefinition> <!--- Row for spacer -->
+                    <RowDefinition Height="*"></RowDefinition> <!--- Row for the groups and delete buttons grid-->
+                </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width=".25*"></ColumnDefinition>
-                    <ColumnDefinition Width=".75*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+                <!-- Grid for the create and join buttons-->
+                <Grid Grid.Row="1" ColumnSpacing="-5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".5*"></ColumnDefinition>
+                        <ColumnDefinition Width=".5*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-                <!-- Grid goes inside first grid in top right corner -->
-                    <Grid Grid.Row="0" Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="3*"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                        </Grid.RowDefinitions>
+                    <Button x:Name="btnCreate" Text="Create" Grid.Column="0" BackgroundColor="Black" TextColor="White"></Button>
+                    <Button x:Name="btnJoin" Text="Join" Grid.Column="1" BackgroundColor="Black" TextColor="White"></Button>
+                </Grid>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"></ColumnDefinition>
-                            <ColumnDefinition Width="1*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-
-                        <BoxView Grid.Row="0" Grid.Column="0" Color="Blue" Grid.ColumnSpan="2"></BoxView>
-                        <BoxView Grid.Row="1" Grid.Column="1" Color="Red"></BoxView>
-                        <BoxView Grid.Row="1" Grid.Column="0" Color="Red"></BoxView>
-                        <Button x:Name="btnCreateSm" Grid.Row="1" Grid.Column="0" Text="Create" BackgroundColor="White"></Button>
-                        <Button x:Name="btnJoinSm" Grid.Row="1" Grid.Column="1" Text="Join" BackgroundColor="White"></Button>
-                    </Grid>
-
-                <!--<BoxView Grid.Row="0" Grid.Column="1" Color="Red"></BoxView>-->
-                <BoxView Grid.Row="1" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="2" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="3" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="4" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="5" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="6" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="7" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="8" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="9" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="10" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="11" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="12" Grid.Column="1" Color="Red"></BoxView>
-                <BoxView Grid.Row="0" Grid.Column="0" Color="Green"></BoxView>
-                <BoxView Grid.Row="1" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="2" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="3" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="4" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="5" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="6" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="7" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="8" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="9" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="10" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="11" Grid.Column="0" Color="Yellow"></BoxView>
-                <BoxView Grid.Row="12" Grid.Column="0" Color="Yellow"></BoxView>
+                <!---Spacer -->
+                <BoxView Grid.Row="2" BackgroundColor="Black"></BoxView>
+                
+                <!---Grid for groups and delete buttons -->
+                <Grid x:Name="grdGroups" Grid.Row="3" ColumnSpacing="0" RowSpacing="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"></ColumnDefinition>
+                        <ColumnDefinition Width="1"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
                 </Grid>
-            </ScrollView>
-        </StackLayout>
+
+                <!--<BoxView Grid.Row="0" BackgroundColor="Red"></BoxView>
+                <BoxView Grid.Row="1" BackgroundColor="Black"></BoxView>
+                <BoxView Grid.Row="2" BackgroundColor="Yellow"></BoxView>
+                <BoxView Grid.Row="3" BackgroundColor="Blue"></BoxView>-->
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

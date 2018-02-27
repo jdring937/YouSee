@@ -54,7 +54,7 @@ namespace YouSee
             grdMembersGrid.Children.Add(defaultUser, 0, 1);
             grdMembersGrid.Children.Add(boxSpace, 0, 2);
 
-            //Add usernames to page dynamically -- Change i to count of users
+            //Add usernames to page dynamically -- Change i < " " to count of users
             //Can move this another method or class later
             for (int i = 0; i < 10; i++)
             {

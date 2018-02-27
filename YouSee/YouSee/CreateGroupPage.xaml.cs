@@ -25,7 +25,17 @@ namespace YouSee
             String groupName = txtGroupName.Text;
             String groupCode = RandomString();
             String hostid = Application.Current.Properties["savedUserID"].ToString();
-            Application.Current.Properties.Add("savedGroupName", groupName);
+            //Application.Current.Properties.Add("savedGroupName", groupName);
+
+            if (Application.Current.Properties.ContainsKey("savedGroupName"))
+            {
+                Application.Current.Properties.Remove("savedGroupName");
+                Application.Current.Properties.Add("savedGroupName", groupName);
+            }
+            else
+            {
+                Application.Current.Properties.Add("savedGroupName", groupName);
+            }
             int hostID = Convert.ToInt32(hostid);
 
             NetworkUtils.insertGroup(groupName, groupCode, hostID);
@@ -81,8 +91,8 @@ namespace YouSee
         public static void createHamburgerIcon()
         {
             var menuPage = new MenuPage();
-            //This line determines the page that will be opened with hamburger menu (Change 'MainPge' to whatever page you want)
-            App.navigationPage = new NavigationPage(new GroupPage { Title = Application.Current.Properties["savedUserName"].ToString() }); //Displays username next to icon
+            //This line determines the page that will be opened with hamburger menu (Change 'GroupPage' to whatever page you want)
+            App.navigationPage = new NavigationPage(new GroupPage { Title = Application.Current.Properties["savedGroupName"].ToString() }); //Displays username next to icon
             App.navigationPage.BarBackgroundColor = Color.Red;
             App.navigationPage.BackgroundColor = Color.Black;
             var rootPage = new RootPage();

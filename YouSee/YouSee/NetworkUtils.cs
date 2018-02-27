@@ -63,13 +63,13 @@ namespace YouSee
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
             App.Current.Properties.Add("savedUserID", userID);
+            Console.WriteLine(App.Current.Properties["savedUserID"]);
             return userID;
         }//end InsertDB
 
@@ -171,7 +171,60 @@ namespace YouSee
             return numResult;
         }//End searchRandom
 
+        //Get list of groups that user is in
+        public static List<String> getUserGroups()
+        {
+            //Stores names of groups user is in in a list
+            List<String> userGroups = new List<String>();
+            String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+            //String query = "SELECT TOP (100) PERCENT dbo.tGroup.GroupName AS groupName FROM dbo.tUsers INNER JOIN dbo.tGroup_User ON dbo.tUsers.UserID = dbo.tGroup_User.UserID INNER JOIN dbo.tGroup ON dbo.tGroup_User.GroupID = dbo.tGroup.GroupID GROUP BY dbo.tGroup_User.GroupID, dbo.tGroup.GroupName, dbo.tUsers.UserID, dbo.tUsers.userName HAVING(dbo.tUsers.UserID = 66) ORDER BY groupName";
+            String userID = App.Current.Properties["savedUserID"].ToString();
+            Console.WriteLine(userID);
+            String query = "EXEC spGetUserGroups " + userID;
+            int numResult = 0;
 
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandText = query;
+
+                        sqlConn.Open();
+
+                        //Read the result
+                        try
+                        {
+                            SqlDataAdapter daSearchGroups = new SqlDataAdapter(command);
+                            DataTable dtReturnedGroups = new DataTable();
+                            daSearchGroups.Fill(dtReturnedGroups);
+                            numResult = dtReturnedGroups.Rows.Count;
+
+                            for(int i = 0; i < numResult; i++)
+                            {
+                                DataRow dr = dtReturnedGroups.Rows[i];
+                                userGroups.Add(dr["groupName"].ToString());
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                        finally
+                        {
+                            sqlConn.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return userGroups;
+        }
 
         //This works! Connects xamarin app to ms sql DB... Template Method
         public static void ConnectDB()
@@ -180,7 +233,7 @@ namespace YouSee
             String myString = "userName";
 
             //Returns users from DB
-            String query = "sELECT userName FROM tUsers";
+            String query = "SELECT userName FROM tUsers";
 
             //String used to connect to DB
             String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
@@ -203,7 +256,6 @@ namespace YouSee
                         Console.WriteLine(s);
                     }
                 }
-
             }
             catch (Exception ex)
             {
