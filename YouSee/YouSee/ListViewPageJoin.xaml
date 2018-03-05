@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- For full screen button -->
-        <Button x:Name="btnBack" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Text="Back" BackgroundColor="#ffc32b"></Button>
+        <Button x:Name="btnBack" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Text="Back" BackgroundColor="Black" TextColor="White"></Button>
 
         <ListView x:Name="MyListView"
                     Grid.Column="0"

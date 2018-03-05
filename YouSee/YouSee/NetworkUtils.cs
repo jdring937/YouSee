@@ -14,6 +14,8 @@ namespace YouSee
     {
         //Retrieves the local IPv4 address
         //https://stackoverflow.com/questions/6803073/get-local-ip-address
+
+        public static Dictionary<int, String> groupsDictionary = new Dictionary<int, string>();
         public static string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -68,8 +70,9 @@ namespace YouSee
             {
                 Console.WriteLine(ex.Message);
             }
-            App.Current.Properties.Add("savedUserID", userID);
-            Console.WriteLine(App.Current.Properties["savedUserID"]);
+            //App.Current.Properties.Add("savedUserID", userID);
+            //Console.WriteLine(App.Current.Properties["savedUserID"]);
+            AppProperties.setSavedUserId(userID);
             return userID;
         }//end InsertDB
 
@@ -114,17 +117,13 @@ namespace YouSee
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
             return groupID;
         }//end InsertDB
-
-
 
         //Check to see if the random group code is already in the DB
         public static int searchDBForRandom(String myRandom)
@@ -176,6 +175,7 @@ namespace YouSee
         {
             //Stores names of groups user is in in a list
             List<String> userGroups = new List<String>();
+            List<int> groupIDs = new List<int>();
             String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
             //String query = "SELECT TOP (100) PERCENT dbo.tGroup.GroupName AS groupName FROM dbo.tUsers INNER JOIN dbo.tGroup_User ON dbo.tUsers.UserID = dbo.tGroup_User.UserID INNER JOIN dbo.tGroup ON dbo.tGroup_User.GroupID = dbo.tGroup.GroupID GROUP BY dbo.tGroup_User.GroupID, dbo.tGroup.GroupName, dbo.tUsers.UserID, dbo.tUsers.userName HAVING(dbo.tUsers.UserID = 66) ORDER BY groupName";
             String userID = App.Current.Properties["savedUserID"].ToString();
@@ -205,6 +205,8 @@ namespace YouSee
                             {
                                 DataRow dr = dtReturnedGroups.Rows[i];
                                 userGroups.Add(dr["groupName"].ToString());
+                                groupIDs.Add((int)dr["groupID"]);
+                                groupsDictionary.Add(groupIDs[i], userGroups[i]);
                             }
 
                         }
@@ -224,6 +226,212 @@ namespace YouSee
                 Console.WriteLine(ex.Message);
             }
             return userGroups;
+        }
+
+        //Delete a user from the selected group when they click the trashcan
+        public static void DeleteUserFromGroup(String groupName)
+        {
+            String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+            int userID = Convert.ToInt32(App.Current.Properties["savedUserID"]);
+            String query = "EXEC spDeleteUserFromGroup '" + groupName + "', " + userID;
+
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandText = query;
+
+                        sqlConn.Open();
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        //Retrieve the groupID when a user enters a group code
+        public static int getGroupIdFromGroupCode(String groupCode)
+        {
+            String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+            String query = "EXEC spGetGroupIDFromGroupCode '" + groupCode + "'";
+            int groupID = 0;
+            int numResult;
+
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandText = query;
+
+                        sqlConn.Open();
+                        try
+                        {
+                            //Executes the stored procedure and returns the userID
+                            SqlDataAdapter daSearchGroups = new SqlDataAdapter(command);
+                            DataTable dtReturnedGroups = new DataTable();
+                            daSearchGroups.Fill(dtReturnedGroups);
+                            numResult = dtReturnedGroups.Rows.Count;
+
+                            for (int i = 0; i < numResult; i++)
+                            {
+                                DataRow dr = dtReturnedGroups.Rows[i];
+                                groupID = ((int)dr["groupID"]);
+                            }
+                            Console.WriteLine(groupID.ToString());
+                        }
+                        catch (Exception exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                            Console.WriteLine(query);
+                        }
+                        finally
+                        {
+                            sqlConn.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return groupID;
+        }
+
+        //Retrieve the groupID when a user enters a group code
+        public static String getGroupNameFromGroupCode(String groupCode)
+        {
+            String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+            String query = "EXEC spGetGroupNameFromCode'" + groupCode + "'";
+            String groupName = null;
+            int numResult;
+
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandText = query;
+
+                        sqlConn.Open();
+                        try
+                        {
+                            //Executes the stored procedure and returns the userID
+                            SqlDataAdapter daSearchGroups = new SqlDataAdapter(command);
+                            DataTable dtReturnedGroups = new DataTable();
+                            daSearchGroups.Fill(dtReturnedGroups);
+                            numResult = dtReturnedGroups.Rows.Count;
+
+                            for (int i = 0; i < numResult; i++)
+                            {
+                                DataRow dr = dtReturnedGroups.Rows[i];
+                                groupName = dr["GroupName"].ToString();
+                            }
+                            Console.WriteLine(groupName);
+                        }
+                        catch (Exception exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                            Console.WriteLine(query);
+                        }
+                        finally
+                        {
+                            sqlConn.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return groupName;
+        }
+
+        //Retrieve the groupID when a user enters a group code
+        public static String getGroupCodeFromUserIdAndGroupName(int UserID, String groupName)
+        {
+            String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+            String query = "EXEC spGetGroupCodeFromUserIdAndGroupName " + UserID + ", '" + groupName + "'";
+            String groupCode = null;
+            int numResult;
+
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandText = query;
+
+                        sqlConn.Open();
+                        try
+                        {
+                            //Executes the stored procedure and returns the userID
+                            SqlDataAdapter daSearchGroups = new SqlDataAdapter(command);
+                            DataTable dtReturnedGroups = new DataTable();
+                            daSearchGroups.Fill(dtReturnedGroups);
+                            numResult = dtReturnedGroups.Rows.Count;
+
+                            for (int i = 0; i < numResult; i++)
+                            {
+                                DataRow dr = dtReturnedGroups.Rows[i];
+                                groupCode = dr["GroupCode"].ToString();
+                            }
+                            Console.WriteLine(groupName);
+                        }
+                        catch (Exception exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                            Console.WriteLine(query);
+                        }
+                        finally
+                        {
+                            sqlConn.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return groupCode;
+        }
+
+        //insert a user into a group after they enter a group code
+        public static void insertIntoGroup(int groupID, int userID)
+        {
+            String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+            String query = "INSERT INTO tGroup_User(GroupID, UserID) VALUES (" + groupID + ", " + userID + ")";
+
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandText = query;
+
+                        sqlConn.Open();
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         //This works! Connects xamarin app to ms sql DB... Template Method
