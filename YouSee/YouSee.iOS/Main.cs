@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Xamarin.Forms.Maps;
 
 namespace YouSee.iOS
 {
@@ -14,7 +15,11 @@ namespace YouSee.iOS
         {
             // if you want to use a different Application Delegate class from "AppDelegate"
             // you can specify it here.
+
+            
             UIApplication.Main(args, null, "AppDelegate");
+            Xamarin.FormsMaps.Init();
+
         }
     }
 }

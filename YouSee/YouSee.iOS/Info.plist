@@ -50,5 +50,45 @@
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>YouSee</string>
-</dict>
-</plist>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>fetch</string>
+	</array>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>MKDirectionsRequest</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.apple.maps.directionsrequest</string>
+			</array>
+		</dict>
+	</array>
+	<key>MKDirectionsApplicationSupportedModes</key>
+	<array>
+		<string>MKDirectionsModePlane</string>
+		<string>MKDirectionsModeBike</string>
+		<string>MKDirectionsModeBus</string>
+		<string>MKDirectionsModeCar</string>
+		<string>MKDirectionsModeFerry</string>
+		<string>MKDirectionsModePedestrian</string>
+		<string>MKDirectionsModeStreetcar</string>
+		<string>MKDirectionsModeSubway</string>
+		<string>MKDirectionsModeTaxi</string>
+		<string>MKDirectionsModeTrain</string>
+		<string>MKDirectionsModeOther</string>
+	</array>
+
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Your message goes here</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Your message goes here</string>
+
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Need location for geolocator plugin.</string>
+
+
+
+</dict> </plist> 
