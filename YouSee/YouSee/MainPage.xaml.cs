@@ -21,7 +21,6 @@ namespace YouSee
 {
     public partial class MainPage : ContentPage
     {
-        //Map map;
         CustomMap customMap;
         static double lat;
         static double lng;
@@ -31,6 +30,7 @@ namespace YouSee
             InitializeComponent();
             btnCreate.Clicked += BtnCreate_Clicked;
             btnJoin.Clicked += BtnJoin_Clicked;
+            AddPinOnLoad();
             AddPinsToMap();
             InitTimer();
 
@@ -101,11 +101,10 @@ namespace YouSee
             }
         }
 
-
         //Every 5 seconds, retrieve users location
         public void InitTimer()
         {
-            int secondsInterval = 5;
+            int secondsInterval = 3;
             Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
             {
                 Device.BeginInvokeOnMainThread(() => AddPinsToMap());
@@ -116,16 +115,39 @@ namespace YouSee
         //Go to createGroupPage
         private void BtnCreate_Clicked(object sender, EventArgs e)
         {
-            App.Current.MainPage = new CreatePage();
+            //App.Current.MainPage = new CreatePage();
+            App.navigationPage.Navigation.PushAsync(new CreatePage());
         }
 
         private void BtnJoin_Clicked(object sender, EventArgs e)
         {
-            App.Current.MainPage = new ListViewPageJoin();
+            App.navigationPage.Navigation.PushAsync(new JoinPage());
+            //App.navigationPage.Navigation.PushAsync(new ListViewPageJoin());
         }
 
-        //Await location when page loads and add pin to mark location
+        //Method that runs every 3 seconds and updates the users pin location - prevents panning to that location every 3s
         private async void AddPinsToMap()
+        {
+            await MapUtils.RetrieveLocation();
+            lat = MapUtils.getLat();
+            lng = MapUtils.getLng();
+
+            var customPin = new CustomPin
+            {
+                Type = PinType.Place,
+                Position = new Position(lat, lng),
+                Label = "My Postition!",
+                Id = "myPin",
+                Url = "homepages.uc.edu/~ringjy"
+            };
+
+            //Add pin to map
+            customMap.Pins.Clear();
+            customMap.Pins.Add(customPin);
+        }
+
+        //Adds the first pin to the map and pans to that pins location
+        private async void AddPinOnLoad()
         {
             await MapUtils.RetrieveLocation();
             lat = MapUtils.getLat();
@@ -149,18 +171,11 @@ namespace YouSee
 
         }
 
-        //Get the users location -- Moved to MapUtils Class
-        //public static async Task RetrieveLocation()
-        //{
-        //    var locator = CrossGeolocator.Current;
-        //    locator.DesiredAccuracy = 20;
-        //    TimeSpan span = new TimeSpan(0, 0, 0, 0, 60000);
-        //    var position = await locator.GetPositionAsync(timeout: span);
-
-        //    lat = position.Latitude;
-        //    lng = position.Longitude;
-
-        //}//Retrieve Location
+        //Add a page to top of stack with hamburger menu
+        //var groupPage = new GroupPage { Title = Application.Current.Properties["savedGroupName"].ToString() };
+        //var homePage = App.navigationPage.Navigation.NavigationStack.First();
+        //App.navigationPage.Navigation.InsertPageBefore(groupPage, homePage);
+        //App.navigationPage.PopToRootAsync(true);
 
         //xTODO Implement multithreaded client/server
         //https://www.youtube.com/watch?v=BvRJIYDu7wo -> creates chat
@@ -171,12 +186,17 @@ namespace YouSee
         //xTODO: Get the userID when the user inserts their username
         //https://stackoverflow.com/questions/5228780/how-to-get-last-inserted-id
 
-        //Create map object
-        //map = new Map
-        //{
-        //    HeightRequest = 100,
-        //    WidthRequest = 960,
-        //    VerticalOptions = LayoutOptions.FillAndExpand
-        //};
+        //TODO: Make default page the last page the user was on
+
+        //TODO: Retrieve additional group members locations and place their pins on the map
+
+        //TODO: Place additional users usernames in the group page scrollview
+
+        //TODO: Add pins with additional colors, set additional users to pins to different colors
+
+        //TODO: Add click events to change the active group in ham menu7
+
+        //TODO: Fix the delete SP/update method if necessary -- Currently deleting on groupName... Change to delete on GroupID or GroupUSerID
+
     }
 }

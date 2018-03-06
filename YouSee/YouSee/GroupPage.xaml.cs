@@ -16,12 +16,14 @@ namespace YouSee
         CustomMap customMap;
         double lat;
         double lng;
+        public static String groupName;
 		public GroupPage ()
 		{
 			InitializeComponent ();
             btnInvite.Clicked += BtnInvite_Clicked;
-            AddPinsToMap();
+            AddPinOnLoad();
             InitTimer();
+            groupName = Application.Current.Properties["currentGroup"].ToString();
 
             customMap = new CustomMap
             {
@@ -29,6 +31,47 @@ namespace YouSee
                 WidthRequest = App.ScreenWidth,
                 HeightRequest = App.ScreenHeight
             };
+
+            // create map style buttons
+            var street = new Button { Text = "Street" };
+            var hybrid = new Button { Text = "Hybrid" };
+            var satellite = new Button { Text = "Satellite" };
+            street.Clicked += HandleClicked;
+            hybrid.Clicked += HandleClicked;
+            satellite.Clicked += HandleClicked;
+            street.BackgroundColor = Color.Black;
+            hybrid.BackgroundColor = Color.Black;
+            satellite.BackgroundColor = Color.Black;
+            street.TextColor = Color.White;
+            hybrid.TextColor = Color.White;
+            satellite.TextColor = Color.White;
+
+            //Put maptype buttons in grid
+            var mapTypeGrid = new Grid
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = GridLength.Auto },
+                },
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = new GridLength(3.333, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(3.333, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(3.333, GridUnitType.Star) }
+                },
+                ColumnSpacing = -5,
+                RowSpacing = -5
+
+            };
+            mapTypeGrid.Children.Add(street, 0, 0);
+            mapTypeGrid.Children.Add(hybrid, 1, 0);
+            mapTypeGrid.Children.Add(satellite, 2, 0);
+
+            // put the page together
+            grdMapGrid.Children.Add(customMap, 0, 1);
+            Grid.SetColumnSpan(customMap, 2);
+            grdMapGrid.Children.Add(mapTypeGrid, 0, 0);
+            Grid.SetColumnSpan(mapTypeGrid, 2);
 
             //Create a label for the current users username
             Label defaultUser = new Label();
@@ -46,7 +89,6 @@ namespace YouSee
             rowSpace.Height = 1;
             boxView.BackgroundColor = Color.Red;
 
-
             //Put the page together
             grdMembersGrid.RowDefinitions.Add(rowSpace);
             grdMapGrid.Children.Add(customMap);
@@ -54,7 +96,7 @@ namespace YouSee
             grdMembersGrid.Children.Add(defaultUser, 0, 1);
             grdMembersGrid.Children.Add(boxSpace, 0, 2);
 
-            //Add usernames to page dynamically -- Change i to count of users
+            //Add usernames to page dynamically -- Change i < " " to count of users
             //Can move this another method or class later
             for (int i = 0; i < 10; i++)
             {
@@ -102,18 +144,35 @@ namespace YouSee
                 grdMembersGrid.Children.Add(testUser, 0, userRowIndex);
                 grdMembersGrid.Children.Add(spacer, 0, spacerRowIndex);
             }
+        }
 
+        //Change the map type
+        private void HandleClicked(object sender, EventArgs e)
+        {
+            var b = sender as Button;
+            switch (b.Text)
+            {
+                case "Street":
+                    customMap.MapType = MapType.Street;
+                    break;
+                case "Hybrid":
+                    customMap.MapType = MapType.Hybrid;
+                    break;
+                case "Satellite":
+                    customMap.MapType = MapType.Satellite;
+                    break;
+            }
         }
 
         private void BtnInvite_Clicked(object sender, EventArgs e)
         {
-            App.Current.MainPage = new InvitePage();
+            App.navigationPage.Navigation.PushAsync(new InvitePage());
         }
 
         //Every 5 seconds, retrieve users location
         public void InitTimer()
         {
-            int secondsInterval = 5;
+            int secondsInterval = 3;
             Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
             {
                 Device.BeginInvokeOnMainThread(() => AddPinsToMap());
@@ -141,9 +200,31 @@ namespace YouSee
             //Add pin to map
             customMap.Pins.Clear();
             customMap.Pins.Add(customPin);
+        }
 
-            //Move map to user/pin location
-            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.1)));
+        //Adds the first pin to the map and pans to that pins location
+        private async void AddPinOnLoad()
+        {
+            await MapUtils.RetrieveLocation();
+            lat = MapUtils.getLat();
+            lng = MapUtils.getLng();
+
+            var customPin = new CustomPin
+            {
+                Type = PinType.Place,
+                Position = new Position(lat, lng),
+                Label = "My Postition!",
+                Id = "myPin",
+                Url = "homepages.uc.edu/~ringjy"
+            };
+
+            //Add pin to map
+            customMap.Pins.Clear();
+            customMap.Pins.Add(customPin);
+
+            //Center map on user/pin location
+            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(MapUtils.getLat(), MapUtils.getLng()), Distance.FromMiles(0.1)));
+
         }
 
     }

@@ -3,36 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="YouSee.GroupPage">
     <ContentPage.Content>
+        <!---Grid that contains sub grids, map, and maptype grid/buttons-->
         <Grid x:Name="grdMapGrid" RowSpacing="0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="45"></RowDefinition>
                 <RowDefinition Height="1.5*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <!--<BoxView Color="Red" Grid.Row="0"></BoxView>-->
-
-            <ScrollView Grid.Row="1">
-                <Grid x:Name="grdMembersGrid" RowSpacing="0" BackgroundColor="Black">
+            <!---Scrollable grid for users in a group-->
+            <ScrollView Grid.Row="2" Grid.ColumnSpan="2">
+                <Grid x:Name="grdMembersGrid" RowSpacing="0" BackgroundColor="Black" Grid.Row="2" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="55"></RowDefinition>
                         <RowDefinition Height="55"></RowDefinition>
-                        <!--<RowDefinition Height="55"></RowDefinition>
-                        <RowDefinition Height="55"></RowDefinition>
-                        <RowDefinition Height="55"></RowDefinition>
-                        <RowDefinition Height="55"></RowDefinition>
-                        <RowDefinition Height="55"></RowDefinition>-->
                     </Grid.RowDefinitions>
                     <Button x:Name="btnInvite" Text="Invite to group" TextColor="Red" BackgroundColor="White" Grid.Row="0"></Button>
-                    <!--<BoxView Color="Black" Grid.Row="0"></BoxView>-->
-                    <!--<BoxView Color="Red" Grid.Row="1"></BoxView>
-                    <BoxView WidthRequest="1" BackgroundColor="Black" Grid.Row="2"></BoxView>
-                    <BoxView Color="Red" Grid.Row="2"></BoxView>
-                    <BoxView Color="Pink" Grid.Row="3"></BoxView>
-                    <BoxView Color="Teal" Grid.Row="4"></BoxView>
-                    <BoxView Color="Gray" Grid.Row="5"></BoxView>
-                    <BoxView Color="Yellow" Grid.Row="6"></BoxView>-->
                 </Grid>
             </ScrollView>
+            <!---Black box to prevent seeing scrolling objects behind maptype buttons-->
+            <BoxView BackgroundColor="Black" Grid.Row="0" Grid.ColumnSpan="2"></BoxView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

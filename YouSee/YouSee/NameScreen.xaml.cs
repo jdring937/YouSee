@@ -22,47 +22,52 @@ namespace YouSee
             btnUsername.Clicked += btnUsername_Clicked;
         }
 
+        //Add the user to the DB
         private void btnUsername_Clicked(object sender, EventArgs e)
         {
-            //This works
-            insertUser();
-            saveUserName();
-
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            string filename = Path.Combine(path, "YouSee.txt");
-
-            using (var streamWriter = new StreamWriter(filename, false))
+            String userName = entryName.Text;
+            //Make sure the user entered a username
+            if (string.IsNullOrWhiteSpace(entryName.Text))
             {
-                streamWriter.WriteLine(entryName.Text);
+                lblNoUserName.IsVisible = true;
             }
-
-            using (var streamReader = new StreamReader(filename))
+            else
             {
-                string content = streamReader.ReadToEnd();
-                System.Diagnostics.Debug.WriteLine(content);
-            }
-            //App.Current.MainPage = new MainPage();
+                insertUser();
+                AppProperties.saveUserName(entryName.Text);
 
-            App.createHamburgerIcon();
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string filename = Path.Combine(path, "YouSee.txt");
+
+                using (var streamWriter = new StreamWriter(filename, false))
+                {
+                    streamWriter.WriteLine(entryName.Text);
+                }
+
+                using (var streamReader = new StreamReader(filename))
+                {
+                    string content = streamReader.ReadToEnd();
+                    System.Diagnostics.Debug.WriteLine(content);
+                }
+                App.createHamburgerIcon();
+            }
         }
-
 
         //Insert user dynamically, set UserID
         private void insertUser()
         {
             String ipAddress = NetworkUtils.GetLocalIPAddress();
             String userName = entryName.Text;
-
             //Executes SP and returns userID
+            Console.WriteLine(userName);
             userID = NetworkUtils.insertUser(ipAddress, userName);
-            Console.WriteLine("User ID = " + userID.ToString());
         }
 
-        //Save the username to a persistent variable
-        private async void saveUserName()
-        {
-            App.Current.Properties.Add("savedUserName", entryName.Text);
-            await App.Current.SavePropertiesAsync();
-        }
+        ////Save the username to a persistent variable
+        //private async void saveUserName()
+        //{
+        //    App.Current.Properties.Add("savedUserName", entryName.Text);
+        //    await App.Current.SavePropertiesAsync();
+        //}
     }
 }

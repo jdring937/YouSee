@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YouSee.JoinPage">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="White">
+            <Label Text="Enter your invite code" TextColor="Black" FontSize="Large"></Label>
+            <Entry x:Name="entInviteCode"></Entry>
+            <Label Text="Ask the group creator for their code"></Label>
+            <Button x:Name="btnSubmit" IsEnabled="False" Text="Submit" TextColor="White"></Button>
+            <Label x:Name="lblError" IsVisible="False" Text="There was an error trying to add the group. Please make sure the code you entered is still valid."></Label>
+            </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
