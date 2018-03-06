@@ -98,9 +98,6 @@ namespace YouSee
         {
         }
 
-<<<<<<< HEAD
-        
-=======
         private async void GetLocationOnLoad()
         {
             await RetrieveLocation();
@@ -128,7 +125,7 @@ namespace YouSee
             map.Pins.Add(pin);
             map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.3)));
         }        
->>>>>>> master
+
     }
 }
 
