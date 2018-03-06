@@ -27,7 +27,9 @@ namespace YouSee
             {
                 MainPage = new NameScreen();
             }
+            //CreatePage.createHamburgerIcon();
             //MainPage = new GroupPage();
+
         }
 
 		protected override void OnStart ()
