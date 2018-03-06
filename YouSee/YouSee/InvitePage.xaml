@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YouSee.InvitePage">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="White">
+            <Entry x:Name="entInviteCode" Text="Text" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></Entry>
+            <Label Text="Send this code to whoever you want to join" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></Label>
+            <!--<Button x:Name="btnDone" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Text="Done"></Button>-->
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

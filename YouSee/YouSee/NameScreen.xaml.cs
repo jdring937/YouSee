@@ -13,27 +13,61 @@ namespace YouSee
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class NameScreen : ContentPage
 	{
-		public NameScreen ()
+        //make userID publicly available (read-only)
+        public int userID { get; private set; }
+
+        public NameScreen ()
 		{
 			InitializeComponent ();
             btnUsername.Clicked += btnUsername_Clicked;
         }
+
+        //Add the user to the DB
         private void btnUsername_Clicked(object sender, EventArgs e)
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            string filename = Path.Combine(path, "YouSee.txt");
-
-            using (var streamWriter = new StreamWriter(filename, false))
+            String userName = entryName.Text;
+            //Make sure the user entered a username
+            if (string.IsNullOrWhiteSpace(entryName.Text))
             {
-                streamWriter.WriteLine(entryName.Text);
+                lblNoUserName.IsVisible = true;
             }
-
-            using (var streamReader = new StreamReader(filename))
+            else
             {
-                string content = streamReader.ReadToEnd();
-                System.Diagnostics.Debug.WriteLine(content);
+                insertUser();
+                AppProperties.saveUserName(entryName.Text);
+
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string filename = Path.Combine(path, "YouSee.txt");
+
+                using (var streamWriter = new StreamWriter(filename, false))
+                {
+                    streamWriter.WriteLine(entryName.Text);
+                }
+
+                using (var streamReader = new StreamReader(filename))
+                {
+                    string content = streamReader.ReadToEnd();
+                    System.Diagnostics.Debug.WriteLine(content);
+                }
+                App.createHamburgerIcon();
             }
-            App.Current.MainPage = new MainPage();
         }
+
+        //Insert user dynamically, set UserID
+        private void insertUser()
+        {
+            String ipAddress = NetworkUtils.GetLocalIPAddress();
+            String userName = entryName.Text;
+            //Executes SP and returns userID
+            Console.WriteLine(userName);
+            userID = NetworkUtils.insertUser(ipAddress, userName);
+        }
+
+        ////Save the username to a persistent variable
+        //private async void saveUserName()
+        //{
+        //    App.Current.Properties.Add("savedUserName", entryName.Text);
+        //    await App.Current.SavePropertiesAsync();
+        //}
     }
 }

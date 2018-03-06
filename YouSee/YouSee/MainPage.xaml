@@ -1,29 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:YouSee"
+             xmlns:local="clr-namespace:YouSee;assembly=YouSee"
              x:Class="YouSee.MainPage">
 
-    <Grid x:Name="grdButtonGrid">
+    <ContentPage.Content>
+        <local:CustomMap x:Name="myMap" MapType="Street"
+          WidthRequest="{x:Static local:App.ScreenWidth}"
+          HeightRequest="{x:Static local:App.ScreenHeight}" />
+    </ContentPage.Content>
+
+
+    <Grid x:Name="grdButtonGrid" ColumnSpacing="-5" RowSpacing="-2">
         <!-- Set up grid rows -->
         <Grid.RowDefinitions>
             <RowDefinition Height="0*" />
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3.333*"/>
+            <RowDefinition Height="4.333*"/>
         </Grid.RowDefinitions>
 
         <!-- Set up grid columns-->
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".75*" />
             <ColumnDefinition Width=".75*" />
         </Grid.ColumnDefinitions>
 
         <!-- For full screen button -->
-        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Text="▼" BackgroundColor="#ffc32b"></Button>
+        <!--<Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Text="▼" BackgroundColor="#ffc32b"></Button>-->
 
         <!-- For half screen buttons -->
-        <Button x:Name="btnCreate" Grid.Column="0" Grid.Row="3" Text="Create" BackgroundColor="#ff3321"></Button>
-        <Button x:Name="btnJoin" Grid.Column="1" Grid.Row="3" Text="Join" BackgroundColor="#ff3321"></Button>
+        <Button x:Name="btnCreate" Grid.Column="0" Grid.Row="3" Text="Create" TextColor="White" BackgroundColor="Red"></Button>
+        <Button x:Name="btnJoin" Grid.Column="1" Grid.Row="3" Text="Join" TextColor="White" BackgroundColor="Red"></Button>
     </Grid>
+    <!--Fills whole page with button (Might be useful for putting map behind other controls)-->
+    <!--<Button Text="test"></Button>-->
 
 </ContentPage>

@@ -1,38 +1,29 @@
-﻿//YT GeoLocation tutorial: https://www.youtube.com/watch?v=pH1WaO-5LDk
-//Drawing lines between two points: https://stackoverflow.com/questions/13433648/draw-a-line-between-two-point-on-a-google-map-using-jquery
-//MS SQL nuget https://www.nuget.org/packages/System.Data.SqlClient/
-//CustomMap/Map Pin https://developer.xamarin.com/guides/xamarin-forms/application-fundamentals/custom-renderer/map/customized-pin/
-
+﻿using Plugin.Geolocator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Xamarin.Forms;
-using Plugin.Geolocator;
 using Xamarin.Forms.Maps;
-using System.Diagnostics;
-using System.Data;
-using System.Net;
-using System.Net.Sockets;
-using System.Data.SqlClient;
+using Xamarin.Forms.Xaml;
 
 namespace YouSee
 {
-    public partial class MainPage : ContentPage
-    {
+	public partial class GroupPage : ContentPage
+	{
         CustomMap customMap;
-        static double lat;
-        static double lng;
-
-        public MainPage()
-        {
-            InitializeComponent();
-            btnCreate.Clicked += BtnCreate_Clicked;
-            btnJoin.Clicked += BtnJoin_Clicked;
+        double lat;
+        double lng;
+        public static String groupName;
+		public GroupPage ()
+		{
+			InitializeComponent ();
+            btnInvite.Clicked += BtnInvite_Clicked;
             AddPinOnLoad();
-            AddPinsToMap();
             InitTimer();
+            groupName = Application.Current.Properties["currentGroup"].ToString();
 
             customMap = new CustomMap
             {
@@ -77,13 +68,85 @@ namespace YouSee
             mapTypeGrid.Children.Add(satellite, 2, 0);
 
             // put the page together
-            grdButtonGrid.Children.Add(customMap, 0, 2);
+            grdMapGrid.Children.Add(customMap, 0, 1);
             Grid.SetColumnSpan(customMap, 2);
-            grdButtonGrid.Children.Add(mapTypeGrid, 0, 1);
+            grdMapGrid.Children.Add(mapTypeGrid, 0, 0);
             Grid.SetColumnSpan(mapTypeGrid, 2);
 
+            //Create a label for the current users username
+            Label defaultUser = new Label();
+            defaultUser.Text = Application.Current.Properties["savedUserName"].ToString();
+            defaultUser.HorizontalOptions = LayoutOptions.Center;
+            defaultUser.VerticalOptions = LayoutOptions.Center;
+            defaultUser.TextColor = Color.White;
+            defaultUser.BackgroundColor = Color.Red;
+
+            //Create the horizontal bar to seperate default user from additional members
+            BoxView boxView = new BoxView();
+            BoxView boxSpace = new BoxView();
+            boxSpace.HeightRequest = 1;
+            RowDefinition rowSpace = new RowDefinition();
+            rowSpace.Height = 1;
+            boxView.BackgroundColor = Color.Red;
+
+            //Put the page together
+            grdMembersGrid.RowDefinitions.Add(rowSpace);
+            grdMapGrid.Children.Add(customMap);
+            grdMembersGrid.Children.Add(boxView, 0, 1);
+            grdMembersGrid.Children.Add(defaultUser, 0, 1);
+            grdMembersGrid.Children.Add(boxSpace, 0, 2);
+
+            //Add usernames to page dynamically -- Change i < " " to count of users
+            //Can move this another method or class later
+            for (int i = 0; i < 10; i++)
+            {
+                //User to demonstrate adding multiple users to grid -- foreach user in group do something like this
+                Label testUser = new Label();
+
+                //Change text to username
+                testUser.Text = "user" + i.ToString();
+                testUser.HorizontalOptions = LayoutOptions.Center;
+                testUser.VerticalOptions = LayoutOptions.Center;
+                testUser.TextColor = Color.Black;
+
+                //Box view to set background color
+                BoxView boxView2 = new BoxView();
+                boxView2.BackgroundColor = Color.White;
+
+                //Box view to make a horizontal line between users
+                BoxView spacer = new BoxView();
+                spacer.BackgroundColor = Color.Black;
+                spacer.HeightRequest = 5;
+
+                //Row to add spacer to
+                RowDefinition spacerRow = new RowDefinition();
+                spacerRow.Height = 1;
+
+                //Create a new row definition for new users
+                RowDefinition rowDefinition = new RowDefinition();
+                rowDefinition.Height = 55;
+
+                //Increment i by 1 with temp var to add spacer/spacerRow
+                   int spacerRowIndex = i + 4;
+                   int userRowIndex = i + 3;
+
+                //After first iteration, row index MUST add i to correctly add rows, users, and spacers
+                if(i > 0)
+                {
+                    spacerRowIndex += i;
+                    userRowIndex += i;
+                }
+                //Foreach user -> Add username, add boxview/user to row i -> make another row to add the spacer before adding the next user
+                grdMembersGrid.RowDefinitions.Add(rowDefinition);
+                grdMembersGrid.RowDefinitions.Add(spacerRow);
+                //index starts at 3 because row 0 is invite button, row 1 is default user
+                grdMembersGrid.Children.Add(boxView2, 0, userRowIndex);
+                grdMembersGrid.Children.Add(testUser, 0, userRowIndex);
+                grdMembersGrid.Children.Add(spacer, 0, spacerRowIndex);
+            }
         }
 
+        //Change the map type
         private void HandleClicked(object sender, EventArgs e)
         {
             var b = sender as Button;
@@ -101,46 +164,36 @@ namespace YouSee
             }
         }
 
+        private void BtnInvite_Clicked(object sender, EventArgs e)
+        {
+            App.navigationPage.Navigation.PushAsync(new InvitePage());
+        }
+
         //Every 5 seconds, retrieve users location
         public void InitTimer()
         {
-<<<<<<< HEAD
-=======
             int secondsInterval = 3;
             Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
             {
                 Device.BeginInvokeOnMainThread(() => AddPinsToMap());
                 return true;
             });
->>>>>>> master
         }
 
-        //Go to createGroupPage
-        private void BtnCreate_Clicked(object sender, EventArgs e)
-        {
-            //App.Current.MainPage = new CreatePage();
-            App.navigationPage.Navigation.PushAsync(new CreatePage());
-        }
-
-        private void BtnJoin_Clicked(object sender, EventArgs e)
-        {
-            App.navigationPage.Navigation.PushAsync(new JoinPage());
-            //App.navigationPage.Navigation.PushAsync(new ListViewPageJoin());
-        }
-
-        //Method that runs every 3 seconds and updates the users pin location - prevents panning to that location every 3s
+        //Add pins to map
         private async void AddPinsToMap()
         {
             await MapUtils.RetrieveLocation();
             lat = MapUtils.getLat();
             lng = MapUtils.getLng();
 
+            //Create map pin
             var customPin = new CustomPin
             {
                 Type = PinType.Place,
                 Position = new Position(lat, lng),
                 Label = "My Postition!",
-                Id = "myPin",
+                Id = "Xamarin",
                 Url = "homepages.uc.edu/~ringjy"
             };
 
@@ -165,14 +218,6 @@ namespace YouSee
                 Url = "homepages.uc.edu/~ringjy"
             };
 
-<<<<<<< HEAD
-            map.Pins.Add(pin);
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.3)));
-        }        
-
-    }
-}
-=======
             //Add pin to map
             customMap.Pins.Clear();
             customMap.Pins.Add(customPin);
@@ -181,34 +226,6 @@ namespace YouSee
             customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(MapUtils.getLat(), MapUtils.getLng()), Distance.FromMiles(0.1)));
 
         }
-
-        //Add a page to top of stack with hamburger menu
-        //var groupPage = new GroupPage { Title = Application.Current.Properties["savedGroupName"].ToString() };
-        //var homePage = App.navigationPage.Navigation.NavigationStack.First();
-        //App.navigationPage.Navigation.InsertPageBefore(groupPage, homePage);
-        //App.navigationPage.PopToRootAsync(true);
->>>>>>> master
-
-        //xTODO Implement multithreaded client/server
-        //https://www.youtube.com/watch?v=BvRJIYDu7wo -> creates chat
-
-        //xTODO Implement hamburger menu on mainPage
-        //https://wolfprogrammer.com/2016/09/02/creating-a-hamburger-menu-in-xamarin-forms/
-
-        //xTODO: Get the userID when the user inserts their username
-        //https://stackoverflow.com/questions/5228780/how-to-get-last-inserted-id
-
-        //TODO: Make default page the last page the user was on
-
-        //TODO: Retrieve additional group members locations and place their pins on the map
-
-        //TODO: Place additional users usernames in the group page scrollview
-
-        //TODO: Add pins with additional colors, set additional users to pins to different colors
-
-        //TODO: Add click events to change the active group in ham menu7
-
-        //TODO: Fix the delete SP/update method if necessary -- Currently deleting on groupName... Change to delete on GroupID or GroupUSerID
 
     }
 }

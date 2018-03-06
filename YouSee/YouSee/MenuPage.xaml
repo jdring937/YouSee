@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YouSee.MenuPage">
+    <ContentPage.Content>
+
+        <ScrollView>
+            <!-- Main grid that contains sub grids -->
+            <Grid x:Name="grdNavMenu" RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150"></RowDefinition>
+                    <!--- Row for header info -->
+                    <RowDefinition Height="55"></RowDefinition>
+                    <!---Row for buttons grid -->
+                    <RowDefinition Height="1"></RowDefinition>
+                    <!--- Row for spacer -->
+                    <RowDefinition Height="*"></RowDefinition>
+                    <!--- Row for the groups and delete buttons grid-->
+                </Grid.RowDefinitions>
+
+                <!-- Grid for the create and join buttons-->
+                <Grid Grid.Row="1" ColumnSpacing="-5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".5*"></ColumnDefinition>
+                        <ColumnDefinition Width=".5*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="btnCreateSm" Text="Create" Grid.Column="0" BackgroundColor="Black" TextColor="White"></Button>
+                    <Button x:Name="btnJoinSm" Text="Join" Grid.Column="1" BackgroundColor="Black" TextColor="White"></Button>
+                </Grid>
+
+                <!---Spacer -->
+                <BoxView Grid.Row="2" BackgroundColor="Black"></BoxView>
+
+                <!---Grid for groups and delete buttons -->
+                <Grid x:Name="grdGroups" Grid.Row="3" ColumnSpacing="0" RowSpacing="0" x:FieldModifier="static" BackgroundColor="White">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"></ColumnDefinition>
+                        <ColumnDefinition Width="1"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <!---If you prefer a listView, the work is done... Just have to uncomment/recomment appropriate controls and method-->
+                    <Grid x:Name="grdDeleteBtns" RowSpacing="0"></Grid>
+                    
+                    <ListView x:Name="MyListView"
+                    HorizontalOptions="CenterAndExpand"
+                    ItemsSource="{Binding Items}"
+                    RowHeight="55"
+                    IsPullToRefreshEnabled="True"
+                    IsVisible="False"
+                    x:FieldModifier="public"                    
+                    CachingStrategy="RecycleElement">
+
+                        Built in Cells
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextCell Text="{Binding .}" TextColor="Black" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

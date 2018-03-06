@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="YouSee.NameScreen">
+             x:Class="YouSee.HostPage">
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -11,9 +12,8 @@
         </Grid.RowDefinitions>
 
         <StackLayout Spacing="20" Padding="20" VerticalOptions="Center">
-            <Button x:Name="btnUsername" Text="Create a Username"></Button>
-            <Entry x:Name="entryName" Placeholder="Username" ></Entry>
-            <Label x:Name="lblNoUserName" FontSize="Large" Text="Invalid Username" IsVisible="False"></Label>
+            <Button x:Name="btnHost" Text="Create a Group"></Button>
+            <Entry x:Name="entryGroupName" Placeholder="Group Name" ></Entry>
         </StackLayout>
 
     </Grid>
