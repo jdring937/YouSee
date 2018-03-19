@@ -15,25 +15,26 @@ namespace YouSee
 		public InvitePage ()
 		{
 			InitializeComponent ();
-            entInviteCode.Text = Application.Current.Properties["savedGroupCode"].ToString();
             //In order to allow copy/paste (e_e) 
             //https://stackoverflow.com/questions/27570497/how-do-you-allow-users-to-copy-and-paste-from-an-xamarin-forms-label
+            populateEntryGroupCode();
             entInviteCode.IsEnabled = false;
             entInviteCode.TextColor = Color.Black;
-            btnDone.Clicked += BtnDone_Clicked;
+            //btnDone.Clicked += BtnDone_Clicked;
 		}
 
-        private void BtnDone_Clicked(object sender, EventArgs e)
+        //private void BtnDone_Clicked(object sender, EventArgs e)
+        //{
+        //    CreatePage.createHamburgerIcon(new GroupPage(), GroupPage.groupName);
+        //}
+
+        private void populateEntryGroupCode()
         {
-            var menuPage = new MenuPage();
-            //This line determines the page that will be opened with hamburger menu (Change 'MainPge' to whatever page you want)
-            App.navigationPage = new NavigationPage(new GroupPage { Title = Application.Current.Properties["savedUserName"].ToString() }); //Displays username next to icon
-            App.navigationPage.BarBackgroundColor = Color.Red;
-            App.navigationPage.BackgroundColor = Color.Black;
-            var rootPage = new RootPage();
-            rootPage.Master = menuPage;
-            rootPage.Detail = App.navigationPage;
-            App.Current.MainPage = rootPage;
+            int userID = (int)Application.Current.Properties["savedUserID"];
+            String groupName = GroupPage.groupName;
+            Console.WriteLine(groupName);
+            entInviteCode.Text = NetworkUtils.getGroupCodeFromUserIdAndGroupName(userID, groupName);
+            Console.WriteLine(entInviteCode.Text);
         }
     }
 }

@@ -37,12 +37,14 @@ namespace YouSee.Droid
             }
         }
 
+        //
         protected override MarkerOptions CreateMarker(Pin pin)
         {
             var marker = new MarkerOptions();
             marker.SetPosition(new LatLng(pin.Position.Latitude, pin.Position.Longitude));
             marker.SetTitle(pin.Label);
             marker.SetSnippet(pin.Address);
+            //Change .pin to the pin you want to use (I think)
             marker.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.pin));
             
             return marker;

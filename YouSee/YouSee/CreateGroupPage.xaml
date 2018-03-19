@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="YouSee.CreatePage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Group Name"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            <Entry x:Name="txtGroupName" Placeholder="GroupName"></Entry>
-            <Button x:Name="btnCreateGroup" Text="Create!"></Button>
+        <StackLayout BackgroundColor="White">
+            <!--<Button x:Name="btnBack" Text="Back" BackgroundColor="Black" TextColor="White"></Button>-->
+            <Label Text="Enter a name for your group" TextColor="Black" FontSize="Large"></Label>
+            <Entry x:Name="txtGroupName" Placeholder="Family" BackgroundColor="White"></Entry>
+            <Button x:Name="btnCreateGroup" Text="Create Group" BackgroundColor="Red" TextColor="White"></Button>
+            <Label x:Name="btnSameName" Text="You are already in a group with that name. Please choose a different name" FontSize="Large" IsVisible="False"></Label>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -2312,26 +2312,26 @@ namespace YouSee.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f020127
-			public const int avd_hide_password_1 = 2130837799;
-			
-			// aapt resource value: 0x7f020128
-			public const int avd_hide_password_2 = 2130837800;
-			
 			// aapt resource value: 0x7f020129
-			public const int avd_hide_password_3 = 2130837801;
+			public const int avd_hide_password_1 = 2130837801;
+			
+			// aapt resource value: 0x7f02012a
+			public const int avd_hide_password_2 = 2130837802;
+			
+			// aapt resource value: 0x7f02012b
+			public const int avd_hide_password_3 = 2130837803;
 			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
 			
-			// aapt resource value: 0x7f02012a
-			public const int avd_show_password_1 = 2130837802;
-			
-			// aapt resource value: 0x7f02012b
-			public const int avd_show_password_2 = 2130837803;
-			
 			// aapt resource value: 0x7f02012c
-			public const int avd_show_password_3 = 2130837804;
+			public const int avd_show_password_1 = 2130837804;
+			
+			// aapt resource value: 0x7f02012d
+			public const int avd_show_password_2 = 2130837805;
+			
+			// aapt resource value: 0x7f02012e
+			public const int avd_show_password_3 = 2130837806;
 			
 			// aapt resource value: 0x7f020055
 			public const int common_full_open_on_phone = 2130837589;
@@ -2945,11 +2945,11 @@ namespace YouSee.Droid
 			// aapt resource value: 0x7f020120
 			public const int notification_icon_background = 2130837792;
 			
-			// aapt resource value: 0x7f020125
-			public const int notification_template_icon_bg = 2130837797;
+			// aapt resource value: 0x7f020127
+			public const int notification_template_icon_bg = 2130837799;
 			
-			// aapt resource value: 0x7f020126
-			public const int notification_template_icon_low_bg = 2130837798;
+			// aapt resource value: 0x7f020128
+			public const int notification_template_icon_low_bg = 2130837800;
 			
 			// aapt resource value: 0x7f020121
 			public const int notification_tile_bg = 2130837793;
@@ -2961,7 +2961,13 @@ namespace YouSee.Droid
 			public const int pin = 2130837795;
 			
 			// aapt resource value: 0x7f020124
-			public const int xamarin = 2130837796;
+			public const int pin2 = 2130837796;
+			
+			// aapt resource value: 0x7f020125
+			public const int trashcan = 2130837797;
+			
+			// aapt resource value: 0x7f020126
+			public const int xamarin = 2130837798;
 			
 			static Drawable()
 			{

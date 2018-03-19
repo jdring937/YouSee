@@ -13,6 +13,7 @@
         <StackLayout Spacing="20" Padding="20" VerticalOptions="Center">
             <Button x:Name="btnUsername" Text="Create a Username"></Button>
             <Entry x:Name="entryName" Placeholder="Username" ></Entry>
+            <Label x:Name="lblNoUserName" FontSize="Large" Text="Invalid Username" IsVisible="False"></Label>
         </StackLayout>
 
     </Grid>
