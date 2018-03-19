@@ -18,11 +18,20 @@ namespace YouSee
         {
             var locator = CrossGeolocator.Current;
             locator.DesiredAccuracy = 20;
-            TimeSpan span = new TimeSpan(0, 0, 0, 0, 60000);
-            var position = await locator.GetPositionAsync(timeout: span);
+            TimeSpan span = new TimeSpan(0, 0, 0, 0, 600000);
+            //Crashing right here....................................................
+            try
+            {
+                var position = await locator.GetPositionAsync(timeout: span);
+                lat = position.Latitude;
+                lng = position.Longitude;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
-            lat = position.Latitude;
-            lng = position.Longitude;
+
 
         }//Retrieve Location
 

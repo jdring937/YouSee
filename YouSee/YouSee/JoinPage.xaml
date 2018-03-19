@@ -4,6 +4,7 @@
              x:Class="YouSee.JoinPage">
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
+            <Button x:Name="btnBack" Text="Back" BackgroundColor="Black" TextColor="White"></Button>
             <Label Text="Enter your invite code" TextColor="Black" FontSize="Large"></Label>
             <Entry x:Name="entInviteCode"></Entry>
             <Label Text="Ask the group creator for their code"></Label>
