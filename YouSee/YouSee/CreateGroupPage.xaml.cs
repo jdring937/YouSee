@@ -17,25 +17,43 @@ namespace YouSee
 		{
 			InitializeComponent ();
             btnCreateGroup.Clicked += BtnCreateGroup_Clicked;
-            //btnBack.Clicked += BtnBack_Clicked;
-		}
+            btnBack.Clicked += BtnBack_Clicked;
+            Dictionary<int, String> userGroups = NetworkUtils.getUserGroups();
+            if(MenuPage.pageCount <= 1 && userGroups.Count < 1)
+            {
+                btnBack.IsVisible = true;
+            }
+            //if (MenuPage.prevPage == null || MenuPage.prevPage == "")
+            //{
+            //    btnBack.IsVisible = true;
+            //}
+            //else if (MenuPage.prevPage == Application.Current.Properties["savedUserName"].ToString())
+            //{
+            //    btnBack.IsVisible = true;
+            //}
+            else
+            {
+                btnBack.IsVisible = false;
+            }
+        }
 
         private void BtnBack_Clicked(object sender, EventArgs e)
         {
-            Application.Current.MainPage.Navigation.PopAsync();
+            CreatePage.createHamburgerIcon(new MainPage(), Application.Current.Properties["savedUserName"].ToString());
         }
 
         //When user clicks create group run spInsertGroup on DB
         private void BtnCreateGroup_Clicked(object sender, EventArgs e)
         {
             String groupName = txtGroupName.Text;
-            List<String> tempGroupList = NetworkUtils.getUserGroups();
-            if (tempGroupList.Contains(groupName))
-            {
-                btnSameName.IsVisible = true;
-            }
-            else
-            {
+            //Dictionary<int, String> tempGroupDict = NetworkUtils.getUserGroups();
+            ////List<String> tempGroupList = NetworkUtils.getUserGroups();
+            //if (tempGroupDict.Values.Contains(groupName))
+            //{
+            //    btnSameName.IsVisible = true;
+            //}
+            //else
+            //{
                 String groupCode = RandomString();
                 String hostid = Application.Current.Properties["savedUserID"].ToString();
                 ////Overwrite the groupName if it already exists
@@ -51,9 +69,12 @@ namespace YouSee
                 AppProperties.setSavedGroupName(groupName);
                 int hostID = Convert.ToInt32(hostid);
                 int groupID = NetworkUtils.insertGroup(groupName, groupCode, hostID);
+                AppProperties.setCurrentGroupId(groupID);
 
+                //AppProperties.setGroupsDictionary();
                 ////Add the dictionary to the app properties
-                //NetworkUtils.groupsDictionary.Add(groupID, groupName);
+                NetworkUtils.groupsDictionary.Add(groupID, groupName);
+                
                 //if (Application.Current.Properties.ContainsKey("groupsDictionary"))
                 //{
                 //    Application.Current.Properties.Remove("groupsDictionary");
@@ -78,7 +99,7 @@ namespace YouSee
                 AppProperties.setCurrentGroup(Application.Current.Properties["savedGroupName"].ToString());
                 createHamburgerIcon(new GroupPage(), Application.Current.Properties["savedGroupName"].ToString());
 
-            }
+            //}
         }
 
         //Create new Random String
@@ -109,6 +130,7 @@ namespace YouSee
                 finalString = new string(stringChars);
             }
 
+            AppProperties.setSavedGroupCode(finalString);
             ////Save the group code. Overwrite it if it exists already
             //if (Application.Current.Properties.ContainsKey("savedGroupCode"))
             //{

@@ -10,11 +10,13 @@ using System.Text;
 
 namespace YouSee
 {
-    class NetworkUtils
+    public class NetworkUtils
     {
+        public static List<double> userLats = new List<double>();
+        public static List<double> userLngs = new List<double>();
+
         //Retrieves the local IPv4 address
         //https://stackoverflow.com/questions/6803073/get-local-ip-address
-
         public static Dictionary<int, String> groupsDictionary = new Dictionary<int, string>();
         public static string GetLocalIPAddress()
         {
@@ -171,10 +173,14 @@ namespace YouSee
         }//End searchRandom
 
         //Get list of groups that user is in
-        public static List<String> getUserGroups()
+        public static Dictionary<int, String> getUserGroups()
         {
             //Stores names of groups user is in in a list
-            List<String> userGroups = new List<String>();
+            Dictionary<int, String> userGroups = new Dictionary<int, string>();
+            List<String> groupName = new List<String>();
+
+            try
+            {
             List<int> groupIDs = new List<int>();
             String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
             //String query = "SELECT TOP (100) PERCENT dbo.tGroup.GroupName AS groupName FROM dbo.tUsers INNER JOIN dbo.tGroup_User ON dbo.tUsers.UserID = dbo.tGroup_User.UserID INNER JOIN dbo.tGroup ON dbo.tGroup_User.GroupID = dbo.tGroup.GroupID GROUP BY dbo.tGroup_User.GroupID, dbo.tGroup.GroupName, dbo.tUsers.UserID, dbo.tUsers.userName HAVING(dbo.tUsers.UserID = 66) ORDER BY groupName";
@@ -182,9 +188,6 @@ namespace YouSee
             Console.WriteLine(userID);
             String query = "EXEC spGetUserGroups " + userID;
             int numResult = 0;
-
-            try
-            {
                 using (SqlConnection sqlConn = new SqlConnection(connString))
                 {
                     using (SqlCommand command = sqlConn.CreateCommand())
@@ -201,12 +204,15 @@ namespace YouSee
                             daSearchGroups.Fill(dtReturnedGroups);
                             numResult = dtReturnedGroups.Rows.Count;
 
+                            groupsDictionary.Clear();
+
                             for(int i = 0; i < numResult; i++)
                             {
                                 DataRow dr = dtReturnedGroups.Rows[i];
-                                userGroups.Add(dr["groupName"].ToString());
+                                groupName.Add(dr["groupName"].ToString());
                                 groupIDs.Add((int)dr["groupID"]);
-                                groupsDictionary.Add(groupIDs[i], userGroups[i]);
+                                groupsDictionary.Add(groupIDs[i], groupName[i]);
+                                userGroups.Add(groupIDs[i], groupName[i]);
                             }
 
                         }
@@ -228,12 +234,100 @@ namespace YouSee
             return userGroups;
         }
 
+        //Get list of groups that user is in
+        public static List<String> getUsers()
+        {
+            List<String> users = new List<String>();
+
+            try
+            {
+                String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+                //String query = "SELECT TOP (100) PERCENT dbo.tGroup.GroupName AS groupName FROM dbo.tUsers INNER JOIN dbo.tGroup_User ON dbo.tUsers.UserID = dbo.tGroup_User.UserID INNER JOIN dbo.tGroup ON dbo.tGroup_User.GroupID = dbo.tGroup.GroupID GROUP BY dbo.tGroup_User.GroupID, dbo.tGroup.GroupName, dbo.tUsers.UserID, dbo.tUsers.userName HAVING(dbo.tUsers.UserID = 66) ORDER BY groupName";
+                int groupID = (int)App.Current.Properties["currentGroupID"];
+                int myUser = (int)App.Current.Properties["savedUserID"];
+                //String query = "SELECT dbo.tGroup.GroupName, dbo.tGroup.GroupID, LTRIM(RTRIM(dbo.tUsers.userName)) AS userName, dbo.tUsers.UserID FROM dbo.tGroup INNER JOIN dbo.tGroup_User ON dbo.tGroup.GroupID = dbo.tGroup_User.GroupID INNER JOIN dbo.tUsers ON dbo.tGroup_User.UserID = dbo.tUsers.UserID WHERE (dbo.tGroup.GroupID = " + groupID + ") AND (dbo.tUsers.UserID <> " + myUser + ")";
+                String query = "SELECT dbo.tGroup_User.GroupID, LTRIM(RTRIM(dbo.tUsers.userName)) AS userName, dbo.tUsers.userLat, dbo.tUsers.userLng, dbo.tGroup_User.UserID FROM dbo.tUsers INNER JOIN dbo.tGroup_User ON dbo.tUsers.UserID = dbo.tGroup_User.UserID WHERE (dbo.tGroup_User.GroupID = " + groupID + ") AND (dbo.tGroup_User.UserID <> " + myUser + ")";
+                int numResult = 0;
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandText = query;
+
+                        sqlConn.Open();
+
+                        //Read the result
+                        try
+                        {
+                            SqlDataAdapter daSearchUsers = new SqlDataAdapter(command);
+                            DataTable dtReturnedUsers = new DataTable();
+                            daSearchUsers.Fill(dtReturnedUsers);
+                            numResult = dtReturnedUsers.Rows.Count;
+                            userLats.Clear();
+                            userLngs.Clear();
+
+                            for (int i = 0; i < numResult; i++)
+                            {
+                                DataRow dr = dtReturnedUsers.Rows[i];
+                                users.Add(dr["userName"].ToString());
+                                userLats.Add((double)dr["userLat"]);
+                                userLngs.Add((double)dr["userLng"]);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                        finally
+                        {
+                            sqlConn.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return users;
+        }
+
         //Delete a user from the selected group when they click the trashcan
-        public static void DeleteUserFromGroup(String groupName)
+        //TODO: Rewrite to delte like this, so user can be in two groups with same name... ALso rewrite code that selects active group.. Select based on group id
+        //delete from tGroup_User where userID = 148 and GroupID = 299
+        public static void DeleteUserFromGroup(int GroupID)
         {
             String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
             int userID = Convert.ToInt32(App.Current.Properties["savedUserID"]);
-            String query = "EXEC spDeleteUserFromGroup '" + groupName + "', " + userID;
+            String query = "EXEC spDeleteUserFromGroup '" + GroupID + "', " + userID;
+
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(connString))
+                {
+                    using (SqlCommand command = sqlConn.CreateCommand())
+                    {
+                        command.CommandText = query;
+
+                        sqlConn.Open();
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        //delete from tGroup_User where userID = 148 and GroupID = 299
+        public static void updateCoords(double lat, double lng)
+        {
+            String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+            int userID = Convert.ToInt32(App.Current.Properties["savedUserID"]);
+            String query = "UPDATE tUsers SET userLat = " + lat + ", userLng = " + lng + " WHERE UserID = " + userID;
 
             try
             {
