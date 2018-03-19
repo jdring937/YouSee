@@ -148,8 +148,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1"/>
+    <PackageReference Include="Xamarin.Forms" Version="2.5.1.317207-pre1" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.8" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YouSee\YouSee.csproj">

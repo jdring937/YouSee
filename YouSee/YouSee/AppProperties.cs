@@ -12,7 +12,7 @@ using Xamarin.Forms.Xaml;
 
 namespace YouSee
 {
-    class AppProperties: ContentPage
+    class AppProperties : ContentPage
     {
         //Sets the group currently selected by the user
         public static String setCurrentGroup(String groupName)
@@ -29,6 +29,20 @@ namespace YouSee
             }
             String currentGroup = Application.Current.Properties["currentGroup"].ToString();
             return currentGroup;
+        }
+        public static string getSavedGroupName()
+        {
+            try
+            {
+                String group;
+                group = App.Current.Properties["currentGroup"].ToString();
+                return group;
+            }
+            catch
+            {
+                String group = "";
+                return group;
+            }
         }
 
         //Returns a dicitionary with key of groupID, and value of groupName for groups user is in
@@ -59,6 +73,12 @@ namespace YouSee
             return userId;
         }
 
+        public static int getSaveduserID()
+        {
+            int userId = 0;
+            userId = (int)App.Current.Properties["savedUserID"];
+            return userId;
+        }
         //Save the username to a persistent variable
         public static async void saveUserName(String userName)
         {
@@ -83,6 +103,8 @@ namespace YouSee
             return group;
         }
 
+
+
         //Save the group code to app properties. Not sure if this is needed either, but don't delete yet
         public static String setSavedGroupCode(String groupCode)
         {
@@ -101,5 +123,50 @@ namespace YouSee
             return code;
         }
 
+        public static string getSavedGroupCode()
+        {
+            try
+            {
+                String group;
+                group = App.Current.Properties["savedGroupCode"].ToString();
+                return group;
+            }
+            catch
+            {
+                String group = "";
+                return group;
+            }
+        }
+        public static int setGroupID(int groupCode)
+        {
+            int code;
+            //Save the group code. Overwrite it if it exists already
+            if (Application.Current.Properties.ContainsKey("savedGroupID"))
+            {
+                Application.Current.Properties.Remove("savedGroupID");
+                Application.Current.Properties.Add("savedGroupID", groupCode);
+            }
+            else
+            {
+                Application.Current.Properties.Add("savedGroupID", groupCode);
+            }
+            code = Convert.ToInt32(Application.Current.Properties["savedGroupID"]);
+            return code;
+        }
+        public static int getGroupID()
+        {
+            try
+            {
+                int group;
+                group = Convert.ToInt32(Application.Current.Properties["savedGroupID"]);
+                return group;
+            }
+            catch
+            {
+                int group = 0;
+                return group;
+            }
+
+        }
     }
 }

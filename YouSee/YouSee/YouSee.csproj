@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Apis" Version="1.32.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
-    <PackageReference Include="Xam.Plugin.Geolocator" Version="4.2.0" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
-    <PackageReference Include="Xamarin.Forms.Maps" Version="2.5.0.122203" />
+    <PackageReference Include="Google.Apis" Version="1.32.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.0-preview1-26216-02" />
+    <PackageReference Include="Xam.Plugin.Geolocator" Version="5.0.0.187-beta" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.1.317207-pre1" />
+    <PackageReference Include="Xamarin.Forms.Maps" Version="2.5.1.317207-pre1" />
   </ItemGroup>
 
   <ItemGroup>

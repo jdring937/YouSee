@@ -471,5 +471,51 @@ namespace YouSee
             }
 
         }//End connectDB
+        
+        public static List<String> groupLocations()
+        {
+            List<string> dataList = new List<string>();
+            string dataString = null;
+            int groupID = AppProperties.getGroupID();
+
+            string query = "SELECT tGroup_User.UserID, tUsers.userLat, tUsers.userLng, tGroup_User.GroupID, tUsers.userName " +
+                              "FROM tGroup_User " +
+                              "INNER JOIN tUsers ON tGroup_User.UserID = tUsers.UserID WHERE tGroup_User.GroupID =" + groupID ;
+
+            string connectionString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
+
+            string conString = connectionString;
+            using (SqlConnection connection = new SqlConnection(conString))
+            {
+
+                connection.Open();
+                //
+                // SqlCommand should be created inside using.
+                // ... It receives the SQL statement.
+                // ... It receives the connection object.
+                // ... The SQL text works with a specific database.
+                //
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    //
+                    // Instance methods can be used on the SqlCommand.
+                    // ... These read data.
+                    //
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            dataString = reader["userName"].ToString();
+                            dataString += "," + reader["userLat"].ToString();
+                            dataString += "," + reader["userLng"].ToString();
+                            dataList.Add(dataString);
+                        }
+                    }
+                }
+            }
+            return dataList;
+        }
+
+       
     }
 }

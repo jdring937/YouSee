@@ -24,6 +24,7 @@ namespace YouSee
         {
             String groupCode = entInviteCode.Text;
             int groupID = NetworkUtils.getGroupIdFromGroupCode(groupCode);
+            AppProperties.setGroupID(groupID);
             int userID = (int)Application.Current.Properties["savedUserID"];
             String groupName = NetworkUtils.getGroupNameFromGroupCode(groupCode);
             try
