@@ -12,7 +12,7 @@
             </Grid.RowDefinitions>
 
             <!---Scrollable grid for users in a group-->
-            <ScrollView Grid.Row="2" Grid.ColumnSpan="2">
+            <ScrollView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid x:Name="grdMembersGrid" RowSpacing="0" BackgroundColor="Black" Grid.Row="2" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="55"></RowDefinition>

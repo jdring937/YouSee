@@ -33,6 +33,7 @@ namespace YouSee
             }
             else
             {
+                //Insert user in DB and save username
                 insertUser();
                 AppProperties.saveUserName(entryName.Text);
 
@@ -49,11 +50,12 @@ namespace YouSee
                     string content = streamReader.ReadToEnd();
                     System.Diagnostics.Debug.WriteLine(content);
                 }
-                App.createHamburgerIcon();
+                //Launch MainPage
+                CreatePage.createHamburgerIcon(new MainPage(), Application.Current.Properties["savedUserName"].ToString());
             }
         }
 
-        //Insert user dynamically, set UserID
+        //Insert user, set UserID
         private void insertUser()
         {
             String ipAddress = NetworkUtils.GetLocalIPAddress();
