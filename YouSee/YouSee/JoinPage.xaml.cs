@@ -17,7 +17,34 @@ namespace YouSee
 			InitializeComponent ();
             entInviteCode.TextChanged += EntInviteCode_TextChanged;
             btnSubmit.Clicked += BtnSubmit_Clicked;
+            btnBack.Clicked += BtnBack_Clicked;
+            Dictionary<int, String> userGroups = NetworkUtils.getUserGroups();
+            if (MenuPage.pageCount <= 1 && userGroups.Count < 1)
+            {
+                btnBack.IsVisible = true;
+            }
+            //if(MenuPage.prevPage == null || MenuPage.prevPage == "")
+            //{
+            //    btnBack.IsVisible = true;
+            //}
+            //else if(MenuPage.prevPage == Application.Current.Properties["savedUserName"].ToString())
+            //{
+            //    btnBack.IsVisible = true;
+            //}
+            else
+            {
+                btnBack.IsVisible = false;
+            }
 		}
+
+        private void BtnBack_Clicked(object sender, EventArgs e)
+        {
+            //CreatePage.createHamburgerIcon(new MainPage(), Application.Current.Properties["savedUserName"].ToString());
+            var otherPage = new MainPage { Title = Application.Current.Properties["savedUserName"].ToString() };
+            var homePage = App.navigationPage.Navigation.NavigationStack.First();
+            App.navigationPage.Navigation.InsertPageBefore(otherPage, homePage);
+            App.navigationPage.PopToRootAsync(false);
+        }
 
         //Insert the user into group
         private void BtnSubmit_Clicked(object sender, EventArgs e)
@@ -25,35 +52,43 @@ namespace YouSee
             String groupCode = entInviteCode.Text;
             int groupID = NetworkUtils.getGroupIdFromGroupCode(groupCode);
             int userID = (int)Application.Current.Properties["savedUserID"];
-            String groupName = NetworkUtils.getGroupNameFromGroupCode(groupCode);
-            try
+            Console.WriteLine(NetworkUtils.groupsDictionary.Count);
+            if (NetworkUtils.groupsDictionary.Keys.Contains(groupID))
             {
-                NetworkUtils.insertIntoGroup(groupID, userID);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            //Display error label if code was wrong
-            if(groupID == 0)
-            {
+                lblError.Text = "You are already a member of that group.";
                 lblError.IsVisible = true;
             }
-            else
+            else 
             {
-                try
-                {
-                    //Add the dictionary to the app properties
-                    NetworkUtils.groupsDictionary.Add(groupID, groupName);
-                    AppProperties.setGroupsDictionary();
-                }
-                catch(Exception ex)
-                {
-                    lblError.Text = "You are already a member of that group";
-                    lblError.IsVisible = true;
-                }
-                AppProperties.setCurrentGroup(groupName);
-                CreatePage.createHamburgerIcon(new GroupPage(), groupName);
+                String groupName = NetworkUtils.getGroupNameFromGroupCode(groupCode);
+                //if (NetworkUtils.groupsDictionary.Values.Contains(groupName))
+                //{
+                //    lblError.Text = "You are already a member of a group with that name.";
+                //}
+                //else
+                //{
+                    try
+                    {
+                        //Add the dictionary to the app properties
+                        NetworkUtils.groupsDictionary.Add(groupID, groupName);
+                        AppProperties.setGroupsDictionary();
+                        NetworkUtils.insertIntoGroup(groupID, userID);
+                    }
+                    catch (Exception ex)
+                    {
+                        lblError.Text = "You are already a member of that group";
+                        lblError.IsVisible = true;
+                    }
+                    AppProperties.setCurrentGroup(groupName);
+                    AppProperties.setCurrentGroupId(groupID);
+                    CreatePage.createHamburgerIcon(new GroupPage(), groupName);
+
+                    //Display error label if code was wrong
+                    if (groupID == 0)
+                    {
+                        lblError.IsVisible = true;
+                    }
+                //}
             }
         }
 

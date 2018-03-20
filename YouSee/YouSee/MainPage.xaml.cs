@@ -21,37 +21,48 @@ namespace YouSee
 {
     public partial class MainPage : ContentPage
     {
-        CustomMap customMap;
+        CustomMap customMap = new CustomMap()
+        {
+            MapType = MapType.Street,
+                WidthRequest = App.ScreenWidth,
+                HeightRequest = App.ScreenHeight
+        };
         static double lat;
         static double lng;
+        bool timerOn = false;
 
         public MainPage()
         {
             InitializeComponent();
             btnCreate.Clicked += BtnCreate_Clicked;
             btnJoin.Clicked += BtnJoin_Clicked;
+<<<<<<< HEAD
             InitTimer();
+=======
+            MenuPage.prevPage = this.Title;
+            MenuPage.pageCount += 1;
+        }
+>>>>>>> master
 
-            customMap = new CustomMap
-            {
-                MapType = MapType.Street,
-                WidthRequest = App.ScreenWidth,
-                HeightRequest = App.ScreenHeight
-            };
+        //What happens when the page disappears
+        protected override void OnDisappearing()
+        {
+            //grdButtonGrid.Children.Remove(customMap);
+            timerOn = false;
+            this.grdButtonGrid.Children.Remove(customMap);
+        }
 
+        //What happens when the page appears
+        protected override void OnAppearing()
+        {
+            timerOn = true;
             // create map style buttons
-            var street = new Button { Text = "Street" };
-            var hybrid = new Button { Text = "Hybrid" };
-            var satellite = new Button { Text = "Satellite" };
+            var street = new Button { Text = "Street", BackgroundColor = Color.Black, TextColor = Color.White };
+            var hybrid = new Button { Text = "Hybrid", BackgroundColor = Color.Black, TextColor = Color.White };
+            var satellite = new Button { Text = "Satellite", BackgroundColor = Color.Black, TextColor = Color.White };
             street.Clicked += HandleClicked;
             hybrid.Clicked += HandleClicked;
             satellite.Clicked += HandleClicked;
-            street.BackgroundColor = Color.Black;
-            hybrid.BackgroundColor = Color.Black;
-            satellite.BackgroundColor = Color.Black;
-            street.TextColor = Color.White;
-            hybrid.TextColor = Color.White;
-            satellite.TextColor = Color.White;
 
             //Put maptype buttons in grid
             var mapTypeGrid = new Grid
@@ -81,8 +92,12 @@ namespace YouSee
             Grid.SetColumnSpan(mapTypeGrid, 2);
 
             AddPinOnLoad();
+<<<<<<< HEAD
             AddPinsToMap();
 
+=======
+            InitTimer();
+>>>>>>> master
         }
 
         private void HandleClicked(object sender, EventArgs e)
@@ -105,25 +120,45 @@ namespace YouSee
         //Every 5 seconds, retrieve users location
         public void InitTimer()
         {
-            int secondsInterval = 3;
+            int secondsInterval = 5;
             Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
             {
                 Device.BeginInvokeOnMainThread(() => AddPinsToMap());
-                return true;
+                return timerOn;
             });
         }
 
         //Go to createGroupPage
         private void BtnCreate_Clicked(object sender, EventArgs e)
         {
-            //App.Current.MainPage = new CreatePage();
-            App.navigationPage.Navigation.PushAsync(new CreatePage());
+
+            //Does't crash when doing this, but back btn also doesn't work correctly and ugly UI
+            MenuPage.prevPage = this.Title;
+            if (MenuPage.pageCount <= 1)
+            {
+                App.Current.MainPage = new CreatePage();
+            }
+            else
+            {
+                App.navigationPage.Navigation.PushAsync(new CreatePage());
+            }
+
+            //Cleaner UI, back button works as expected, but crashes on first group entry
+   
         }
 
         private void BtnJoin_Clicked(object sender, EventArgs e)
         {
-            App.navigationPage.Navigation.PushAsync(new JoinPage());
-            //App.navigationPage.Navigation.PushAsync(new ListViewPageJoin());
+            //App.navigationPage.Navigation.PushAsync(new JoinPage());
+            MenuPage.prevPage = this.Title;
+            if(MenuPage.pageCount <= 1)
+            {
+                App.Current.MainPage = new JoinPage();
+            }
+            else
+            {
+                App.navigationPage.Navigation.PushAsync(new ListViewPageJoin());
+            }
         }
 
         //Method that runs every 3 seconds and updates the users pin location - prevents panning to that location every 3s
@@ -137,11 +172,10 @@ namespace YouSee
             {
                 Type = PinType.Place,
                 Position = new Position(lat, lng),
-                Label = "My Postition!",
+                Label = "My Position!",
                 Id = "myPin",
                 Url = "homepages.uc.edu/~ringjy"
             };
-
             //Add pin to map
             customMap.Pins.Clear();
             customMap.Pins.Add(customPin);
@@ -158,7 +192,7 @@ namespace YouSee
             {
                 Type = PinType.Place,
                 Position = new Position(lat, lng),
-                Label = "My Postition!",
+                Label = "My Position!",
                 Id = "myPin",
                 Url = "homepages.uc.edu/~ringjy"
             };
@@ -168,7 +202,7 @@ namespace YouSee
             customMap.Pins.Add(customPin);
 
             //Center map on user/pin location
-            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(MapUtils.getLat(), MapUtils.getLng()), Distance.FromMiles(0.1)));
+            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.1)));
 
         }
 

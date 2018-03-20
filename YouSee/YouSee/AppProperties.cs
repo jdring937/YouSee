@@ -31,10 +31,25 @@ namespace YouSee
             return currentGroup;
         }
 
-        //Returns a dicitionary with key of groupID, and value of groupName for groups user is in
-        public static Dictionary<int, String> setGroupsDictionary()
+        public static int setCurrentGroupId(int GroupID)
         {
-            Dictionary<int, String> groupsDictionary = new Dictionary<int, string>();
+            //Set the current group name in the app properties
+            if (Application.Current.Properties.ContainsKey("currentGroupID"))
+            {
+                Application.Current.Properties.Remove("currentGroupID");
+                Application.Current.Properties.Add("currentGroupID", GroupID);
+            }
+            else
+            {
+                Application.Current.Properties.Add("currentGroupID", GroupID);
+            }
+            int currentGroupID = (int)Application.Current.Properties["currentGroupID"];
+            return currentGroupID;
+        }
+
+        //Returns a dicitionary with key of groupID, and value of groupName for groups user is in
+        public static void setGroupsDictionary()
+        {
             if (Application.Current.Properties.ContainsKey("groupsDictionary"))
             {
                 Application.Current.Properties.Remove("groupsDictionary");
@@ -44,8 +59,7 @@ namespace YouSee
             {
                 Application.Current.Properties.Add("groupsDictionary", NetworkUtils.groupsDictionary);
             }
-            groupsDictionary = (Dictionary<int, String>)Application.Current.Properties["groupsDictionary"];
-            return groupsDictionary;
+
         }
 
         //Saves the users ID to app properties

@@ -108,7 +108,7 @@ namespace YouSee
         private void btnBack_Clicked(object sender, EventArgs e)
         {
             //Take the user back to the main page
-            App.createHamburgerIcon();
+            
         }
 
         public static void joinGroup(int userID, int groupID)

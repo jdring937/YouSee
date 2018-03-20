@@ -4,7 +4,7 @@
              x:Class="YouSee.CreatePage">
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
-            <!--<Button x:Name="btnBack" Text="Back" BackgroundColor="Black" TextColor="White"></Button>-->
+            <Button x:Name="btnBack" Text="Back" BackgroundColor="Black" TextColor="White"></Button>
             <Label Text="Enter a name for your group" TextColor="Black" FontSize="Large"></Label>
             <Entry x:Name="txtGroupName" Placeholder="Family" BackgroundColor="White"></Entry>
             <Button x:Name="btnCreateGroup" Text="Create Group" BackgroundColor="Red" TextColor="White"></Button>

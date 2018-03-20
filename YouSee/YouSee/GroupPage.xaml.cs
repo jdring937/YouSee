@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
@@ -17,14 +18,43 @@ namespace YouSee
         double lat;
         double lng;
         public static String groupName;
-		public GroupPage ()
+        bool timerOn = false;
+        List<String> usersInGroup = NetworkUtils.getUsers();
+
+        public GroupPage ()
 		{
 			InitializeComponent ();
             btnInvite.Clicked += BtnInvite_Clicked;
-            AddPinOnLoad();
-            InitTimer();
             groupName = Application.Current.Properties["currentGroup"].ToString();
+            MenuPage.prevPage = groupName;
+            setupPage();
 
+            int navStackCount = Navigation.NavigationStack.Count;
+            Console.WriteLine(navStackCount);
+        }
+
+        //Add the group member pins to map
+        private void updateGroupPins()
+        {
+            List<String> userNames = NetworkUtils.getUsers();
+            for (int i = 0; i < NetworkUtils.userLats.Count; i++)
+            {
+                //Create map pin
+                var customPin = new CustomPin
+                {
+                    Type = PinType.Place,
+                    Position = new Position(NetworkUtils.userLats[i], NetworkUtils.userLngs[i]),
+                    Label = userNames[i],
+                };
+                customMap.Pins.Add(customPin);
+            }
+        }
+
+        //Set up the page
+        private void setupPage()
+        {
+            timerOn = true;
+            int caseSwitch = 0;
             customMap = new CustomMap
             {
                 MapType = MapType.Street,
@@ -32,21 +62,15 @@ namespace YouSee
                 HeightRequest = App.ScreenHeight
             };
 
-            // create map style buttons
-            var street = new Button { Text = "Street" };
-            var hybrid = new Button { Text = "Hybrid" };
-            var satellite = new Button { Text = "Satellite" };
+            // create map type buttons
+            var street = new Button { Text = "Street", BackgroundColor = Color.Black, TextColor = Color.White };
+            var hybrid = new Button { Text = "Hybrid", BackgroundColor = Color.Black, TextColor = Color.White };
+            var satellite = new Button { Text = "Satellite", BackgroundColor = Color.Black, TextColor = Color.White };
             street.Clicked += HandleClicked;
             hybrid.Clicked += HandleClicked;
             satellite.Clicked += HandleClicked;
-            street.BackgroundColor = Color.Black;
-            hybrid.BackgroundColor = Color.Black;
-            satellite.BackgroundColor = Color.Black;
-            street.TextColor = Color.White;
-            hybrid.TextColor = Color.White;
-            satellite.TextColor = Color.White;
 
-            //Put maptype buttons in grid
+            //Put map type buttons in a grid
             var mapTypeGrid = new Grid
             {
                 RowDefinitions =
@@ -68,18 +92,20 @@ namespace YouSee
             mapTypeGrid.Children.Add(satellite, 2, 0);
 
             // put the page together
-            grdMapGrid.Children.Add(customMap, 0, 1);
-            Grid.SetColumnSpan(customMap, 2);
             grdMapGrid.Children.Add(mapTypeGrid, 0, 0);
             Grid.SetColumnSpan(mapTypeGrid, 2);
+            grdMapGrid.Children.Add(customMap, 0, 1);
+            Grid.SetColumnSpan(customMap, 2);
 
             //Create a label for the current users username
-            Label defaultUser = new Label();
+            MyButton defaultUser = new MyButton();
             defaultUser.Text = Application.Current.Properties["savedUserName"].ToString();
-            defaultUser.HorizontalOptions = LayoutOptions.Center;
-            defaultUser.VerticalOptions = LayoutOptions.Center;
+            defaultUser.HorizontalOptions = LayoutOptions.FillAndExpand;
+            defaultUser.VerticalOptions = LayoutOptions.FillAndExpand;
             defaultUser.TextColor = Color.White;
             defaultUser.BackgroundColor = Color.Red;
+            defaultUser.Image = "pin.png";
+            defaultUser.Clicked += DefaultUser_Clicked;
 
             //Create the horizontal bar to seperate default user from additional members
             BoxView boxView = new BoxView();
@@ -98,20 +124,54 @@ namespace YouSee
 
             //Add usernames to page dynamically -- Change i < " " to count of users
             //Can move this another method or class later
-            for (int i = 0; i < 10; i++)
+            
+            for (int i = 0; i < usersInGroup.Count; i++)
             {
                 //User to demonstrate adding multiple users to grid -- foreach user in group do something like this
-                Label testUser = new Label();
+                MyButton groupMembers = new MyButton();                
 
                 //Change text to username
-                testUser.Text = "user" + i.ToString();
-                testUser.HorizontalOptions = LayoutOptions.Center;
-                testUser.VerticalOptions = LayoutOptions.Center;
-                testUser.TextColor = Color.Black;
+                groupMembers.Text = usersInGroup[i];
+                groupMembers.Image = "pin" + i + ".png";
+                groupMembers.HorizontalOptions = LayoutOptions.FillAndExpand;
+                groupMembers.VerticalOptions = LayoutOptions.Center;
+                groupMembers.TextColor = Color.Black;
+                groupMembers.BackgroundColor = Color.White;
+                groupMembers.Clicked += GroupMembers_Clicked;
 
                 //Box view to set background color
-                BoxView boxView2 = new BoxView();
-                boxView2.BackgroundColor = Color.White;
+                BoxView membersBox = new BoxView();
+                //Switch background color for each user
+                switch(caseSwitch){
+                    case 0:
+                        membersBox.BackgroundColor = Color.FromHex("e67e22");
+                        caseSwitch++;
+                        break;
+                    case 1:
+                        membersBox.BackgroundColor = Color.FromHex("2ecc71");
+                        caseSwitch++;
+                        break;
+                    case 2:
+                        membersBox.BackgroundColor = Color.FromHex("f1c40f");
+                        caseSwitch++;
+                        break;
+                    case 3:
+                        membersBox.BackgroundColor = Color.FromHex("3498db");
+                        caseSwitch++;
+                        break;
+                    case 4:
+                        membersBox.BackgroundColor = Color.FromHex("9b59b6");
+                        caseSwitch++;
+                        break;
+                    case 5:
+                        membersBox.BackgroundColor = Color.FromHex("79F648");
+                        caseSwitch++;
+                        break;
+                    case 6:
+                        membersBox.BackgroundColor = Color.FromHex("36F3FF");
+                        caseSwitch = 0;
+                        break;
+                }
 
                 //Box view to make a horizontal line between users
                 BoxView spacer = new BoxView();
@@ -127,11 +187,11 @@ namespace YouSee
                 rowDefinition.Height = 55;
 
                 //Increment i by 1 with temp var to add spacer/spacerRow
-                   int spacerRowIndex = i + 4;
-                   int userRowIndex = i + 3;
+                int spacerRowIndex = i + 4;
+                int userRowIndex = i + 3;
 
                 //After first iteration, row index MUST add i to correctly add rows, users, and spacers
-                if(i > 0)
+                if (i > 0)
                 {
                     spacerRowIndex += i;
                     userRowIndex += i;
@@ -140,10 +200,62 @@ namespace YouSee
                 grdMembersGrid.RowDefinitions.Add(rowDefinition);
                 grdMembersGrid.RowDefinitions.Add(spacerRow);
                 //index starts at 3 because row 0 is invite button, row 1 is default user
-                grdMembersGrid.Children.Add(boxView2, 0, userRowIndex);
-                grdMembersGrid.Children.Add(testUser, 0, userRowIndex);
+                grdMembersGrid.Children.Add(membersBox, 0, userRowIndex);
+                grdMembersGrid.Children.Add(groupMembers, 0, userRowIndex);
                 grdMembersGrid.Children.Add(spacer, 0, spacerRowIndex);
             }
+
+            AddPinOnLoad();
+            InitTimer();
+        }
+
+        //Pan to users current location on click
+        private void DefaultUser_Clicked(object sender, EventArgs e)
+        {
+            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), customMap.VisibleRegion.Radius));
+        }
+
+        //Pan to the location of the clicked group member
+        private void GroupMembers_Clicked(object sender, EventArgs e)
+        {
+            var row = (int)((BindableObject)sender).GetValue(Grid.RowProperty);
+            int startingRow = 3;
+            double memberLat;
+            double memberLng;
+            if (row == startingRow)
+            {
+                memberLat = NetworkUtils.userLats[0];
+                memberLng = NetworkUtils.userLngs[0];
+                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(memberLat, memberLng), customMap.VisibleRegion.Radius));
+            }
+            else
+            {               
+                for(int i = 1; i < usersInGroup.Count; i++)
+                {
+                    startingRow++;
+                    if(row == i + startingRow)
+                    {
+                        int index = row - startingRow;
+                        memberLat = NetworkUtils.userLats[index];
+                        memberLng = NetworkUtils.userLngs[index];
+                        customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(memberLat, memberLng), customMap.VisibleRegion.Radius));
+                    }
+                }
+            }
+        }
+
+        //What to do when the page re-appears
+        protected override void OnAppearing()
+        {
+            timerOn = true;
+            AddPinOnLoad();
+            InitTimer();
+        }
+
+        //What to do when the page dissapears
+        protected override void OnDisappearing()
+        {
+            timerOn = false;
         }
 
         //Change the map type
@@ -172,12 +284,14 @@ namespace YouSee
         //Every 5 seconds, retrieve users location
         public void InitTimer()
         {
-            int secondsInterval = 3;
-            Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
-            {
-                Device.BeginInvokeOnMainThread(() => AddPinsToMap());
-                return true;
-            });
+                int secondsInterval = 5;
+                Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
+                {
+                    Device.BeginInvokeOnMainThread(() => AddPinsToMap());
+
+                    Console.WriteLine(timerOn);
+                    return timerOn;
+                });
         }
 
         //Add pins to map
@@ -192,7 +306,7 @@ namespace YouSee
             {
                 Type = PinType.Place,
                 Position = new Position(lat, lng),
-                Label = "My Postition!",
+                Label = "My Position!",
                 Id = "Xamarin",
                 Url = "homepages.uc.edu/~ringjy"
             };
@@ -200,6 +314,9 @@ namespace YouSee
             //Add pin to map
             customMap.Pins.Clear();
             customMap.Pins.Add(customPin);
+            updateGroupPins();
+
+            NetworkUtils.updateCoords(lat, lng);
         }
 
         //Adds the first pin to the map and pans to that pins location
@@ -213,7 +330,7 @@ namespace YouSee
             {
                 Type = PinType.Place,
                 Position = new Position(lat, lng),
-                Label = "My Postition!",
+                Label = "My Position!",
                 Id = "myPin",
                 Url = "homepages.uc.edu/~ringjy"
             };
@@ -221,9 +338,11 @@ namespace YouSee
             //Add pin to map
             customMap.Pins.Clear();
             customMap.Pins.Add(customPin);
+            updateGroupPins();
+            NetworkUtils.updateCoords(lat, lng);
 
             //Center map on user/pin location
-            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(MapUtils.getLat(), MapUtils.getLng()), Distance.FromMiles(0.1)));
+            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.1)));
 
         }
 
