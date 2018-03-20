@@ -20,15 +20,17 @@ namespace YouSee
         public static String groupName;
         bool timerOn = false;
         List<String> usersInGroup = NetworkUtils.getUsers();
+        int countOfUsers;
+        int countOfUsersInList;
 
         public GroupPage ()
 		{
 			InitializeComponent ();
-            btnInvite.Clicked += BtnInvite_Clicked;
+            //btnInvite.Clicked += BtnInvite_Clicked;
             groupName = Application.Current.Properties["currentGroup"].ToString();
             MenuPage.prevPage = groupName;
             setupPage();
-
+            countOfUsers = usersInGroup.Count;
             int navStackCount = Navigation.NavigationStack.Count;
             Console.WriteLine(navStackCount);
         }
@@ -54,7 +56,7 @@ namespace YouSee
         private void setupPage()
         {
             timerOn = true;
-            int caseSwitch = 0;
+
             customMap = new CustomMap
             {
                 MapType = MapType.Street,
@@ -97,6 +99,32 @@ namespace YouSee
             grdMapGrid.Children.Add(customMap, 0, 1);
             Grid.SetColumnSpan(customMap, 2);
 
+            //Create the horizontal bar to seperate default user from additional members
+
+            RowDefinition rowSpace = new RowDefinition();
+            rowSpace.Height = 1;
+
+
+            //Put the page together
+            grdMembersGrid.RowDefinitions.Add(rowSpace);
+            grdMapGrid.Children.Add(customMap);
+
+
+            //Add usernames to page dynamically -- Change i < " " to count of users
+            //Can move this another method or class later
+            showGroupMembersInGrid();
+            AddPinOnLoad();
+            InitTimer();
+        }
+
+        private void showGroupMembersInGrid()
+        {
+            grdMembersGrid.Children.Clear();
+            Button btnInvite = new Button();
+            btnInvite.Text = "Invite to Group";
+            btnInvite.BackgroundColor = Color.White;
+            btnInvite.Clicked += BtnInvite_Clicked;
+            grdMembersGrid.Children.Add(btnInvite, 0, 0);
             //Create a label for the current users username
             MyButton defaultUser = new MyButton();
             defaultUser.Text = Application.Current.Properties["savedUserName"].ToString();
@@ -106,30 +134,20 @@ namespace YouSee
             defaultUser.BackgroundColor = Color.Red;
             defaultUser.Image = "pin.png";
             defaultUser.Clicked += DefaultUser_Clicked;
-
-            //Create the horizontal bar to seperate default user from additional members
             BoxView boxView = new BoxView();
             BoxView boxSpace = new BoxView();
-            boxSpace.HeightRequest = 1;
-            RowDefinition rowSpace = new RowDefinition();
-            rowSpace.Height = 1;
             boxView.BackgroundColor = Color.Red;
-
-            //Put the page together
-            grdMembersGrid.RowDefinitions.Add(rowSpace);
-            grdMapGrid.Children.Add(customMap);
+            boxSpace.HeightRequest = 1;
             grdMembersGrid.Children.Add(boxView, 0, 1);
             grdMembersGrid.Children.Add(defaultUser, 0, 1);
             grdMembersGrid.Children.Add(boxSpace, 0, 2);
+            int caseSwitch = 0;
 
-            //Add usernames to page dynamically -- Change i < " " to count of users
-            //Can move this another method or class later
-            
             for (int i = 0; i < usersInGroup.Count; i++)
             {
                 //User to demonstrate adding multiple users to grid -- foreach user in group do something like this
-                MyButton groupMembers = new MyButton();                
-
+                MyButton groupMembers = new MyButton();
+                
                 //Change text to username
                 groupMembers.Text = usersInGroup[i];
                 groupMembers.Image = "pin" + i + ".png";
@@ -142,7 +160,8 @@ namespace YouSee
                 //Box view to set background color
                 BoxView membersBox = new BoxView();
                 //Switch background color for each user
-                switch(caseSwitch){
+                switch (caseSwitch)
+                {
                     case 0:
                         membersBox.BackgroundColor = Color.FromHex("e67e22");
                         caseSwitch++;
@@ -203,12 +222,11 @@ namespace YouSee
                 grdMembersGrid.Children.Add(membersBox, 0, userRowIndex);
                 grdMembersGrid.Children.Add(groupMembers, 0, userRowIndex);
                 grdMembersGrid.Children.Add(spacer, 0, spacerRowIndex);
+
+                countOfUsersInList = grdMembersGrid.RowDefinitions.Count / 2 - 1;
             }
-
-            AddPinOnLoad();
-            InitTimer();
         }
-
+        
         //Pan to users current location on click
         private void DefaultUser_Clicked(object sender, EventArgs e)
         {
@@ -288,7 +306,12 @@ namespace YouSee
                 Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
                 {
                     Device.BeginInvokeOnMainThread(() => AddPinsToMap());
-
+                    Device.BeginInvokeOnMainThread(() => usersInGroup = NetworkUtils.getUsers());
+                    countOfUsers = usersInGroup.Count;
+                    if(countOfUsers != countOfUsersInList)
+                    {
+                        showGroupMembersInGrid();
+                    }
                     Console.WriteLine(timerOn);
                     return timerOn;
                 });

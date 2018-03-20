@@ -18,7 +18,7 @@
                         <RowDefinition Height="55"></RowDefinition>
                         <RowDefinition Height="55"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Button x:Name="btnInvite" Text="Invite to group" TextColor="Red" BackgroundColor="White" Grid.Row="0"></Button>
+                    <!--<Button x:Name="btnInvite" Text="Invite to group" TextColor="Red" BackgroundColor="White" Grid.Row="0"></Button>-->
                 </Grid>
             </ScrollView>
             <!---Black box to prevent seeing scrolling objects behind maptype buttons-->
