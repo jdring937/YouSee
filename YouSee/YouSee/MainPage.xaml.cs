@@ -30,8 +30,6 @@ namespace YouSee
             InitializeComponent();
             btnCreate.Clicked += BtnCreate_Clicked;
             btnJoin.Clicked += BtnJoin_Clicked;
-            AddPinOnLoad();
-            AddPinsToMap();
             InitTimer();
 
             customMap = new CustomMap
@@ -82,6 +80,9 @@ namespace YouSee
             grdButtonGrid.Children.Add(mapTypeGrid, 0, 1);
             Grid.SetColumnSpan(mapTypeGrid, 2);
 
+            AddPinOnLoad();
+            AddPinsToMap();
+
         }
 
         private void HandleClicked(object sender, EventArgs e)
@@ -104,15 +105,12 @@ namespace YouSee
         //Every 5 seconds, retrieve users location
         public void InitTimer()
         {
-<<<<<<< HEAD
-=======
             int secondsInterval = 3;
             Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
             {
                 Device.BeginInvokeOnMainThread(() => AddPinsToMap());
                 return true;
             });
->>>>>>> master
         }
 
         //Go to createGroupPage
@@ -165,14 +163,6 @@ namespace YouSee
                 Url = "homepages.uc.edu/~ringjy"
             };
 
-<<<<<<< HEAD
-            map.Pins.Add(pin);
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), Distance.FromMiles(0.3)));
-        }        
-
-    }
-}
-=======
             //Add pin to map
             customMap.Pins.Clear();
             customMap.Pins.Add(customPin);
@@ -187,7 +177,6 @@ namespace YouSee
         //var homePage = App.navigationPage.Navigation.NavigationStack.First();
         //App.navigationPage.Navigation.InsertPageBefore(groupPage, homePage);
         //App.navigationPage.PopToRootAsync(true);
->>>>>>> master
 
         //xTODO Implement multithreaded client/server
         //https://www.youtube.com/watch?v=BvRJIYDu7wo -> creates chat

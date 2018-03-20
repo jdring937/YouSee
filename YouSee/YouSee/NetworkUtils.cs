@@ -16,6 +16,7 @@ namespace YouSee
         //https://stackoverflow.com/questions/6803073/get-local-ip-address
 
         public static Dictionary<int, String> groupsDictionary = new Dictionary<int, string>();
+        
         public static string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -28,6 +29,8 @@ namespace YouSee
             }
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
+        
+
 
         //Insert new users into DB
         public static int insertUser(String userIP, String userName)
