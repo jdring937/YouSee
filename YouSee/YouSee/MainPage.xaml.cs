@@ -36,13 +36,13 @@ namespace YouSee
             InitializeComponent();
             btnCreate.Clicked += BtnCreate_Clicked;
             btnJoin.Clicked += BtnJoin_Clicked;
-<<<<<<< HEAD
+
             InitTimer();
-=======
+
             MenuPage.prevPage = this.Title;
             MenuPage.pageCount += 1;
         }
->>>>>>> master
+
 
         //What happens when the page disappears
         protected override void OnDisappearing()
@@ -92,12 +92,12 @@ namespace YouSee
             Grid.SetColumnSpan(mapTypeGrid, 2);
 
             AddPinOnLoad();
-<<<<<<< HEAD
+
             AddPinsToMap();
 
-=======
+
             InitTimer();
->>>>>>> master
+
         }
 
         private void HandleClicked(object sender, EventArgs e)
