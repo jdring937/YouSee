@@ -1,6 +1,8 @@
-﻿using Plugin.Geolocator;
+﻿using Android;
+using Plugin.Geolocator;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -20,19 +22,29 @@ namespace YouSee
         public static String groupName;
         bool timerOn = false;
         List<String> usersInGroup = NetworkUtils.getUsers();
+        List<String> usersInGrid = new List<string>();
+        //List<String> differenceInUsers = new List<String>();
         int countOfUsers;
-        int countOfUsersInList;
-
+        int countOfUsersInGrid;
+        User myUsers;
+        List<int> userIDs = new List<int>();
+        List<double> userLats = new List<double>();
+        List<double> userLngs = new List<double>();
         public GroupPage ()
 		{
 			InitializeComponent ();
-            //btnInvite.Clicked += BtnInvite_Clicked;
             groupName = Application.Current.Properties["currentGroup"].ToString();
             MenuPage.prevPage = groupName;
             setupPage();
             countOfUsers = usersInGroup.Count;
-            int navStackCount = Navigation.NavigationStack.Count;
-            Console.WriteLine(navStackCount);
+            for(int i = 0; i < usersInGroup.Count; i++)
+            {
+                //Every user in the list now has associated properties
+                userIDs.Add(i);
+                userLats.Add(NetworkUtils.userLats[i]);
+                userLngs.Add(NetworkUtils.userLngs[i]);
+            }
+            myUsers= new User { userNames = new ObservableCollection<string>(usersInGroup), userID = userIDs, userLats = userLats, userLngs = userLngs };
         }
 
         //Add the group member pins to map
@@ -93,38 +105,39 @@ namespace YouSee
             mapTypeGrid.Children.Add(hybrid, 1, 0);
             mapTypeGrid.Children.Add(satellite, 2, 0);
 
-            // put the page together
+            // put the map grid together
             grdMapGrid.Children.Add(mapTypeGrid, 0, 0);
             Grid.SetColumnSpan(mapTypeGrid, 2);
             grdMapGrid.Children.Add(customMap, 0, 1);
             Grid.SetColumnSpan(customMap, 2);
 
             //Create the horizontal bar to seperate default user from additional members
+            //RowDefinition rowSpace = new RowDefinition();
+            //rowSpace.Height = 1;
 
-            RowDefinition rowSpace = new RowDefinition();
-            rowSpace.Height = 1;
-
-
-            //Put the page together
-            grdMembersGrid.RowDefinitions.Add(rowSpace);
+            //Put the members grid together
+            //grdMembersGrid.RowDefinitions.Add(rowSpace);
             grdMapGrid.Children.Add(customMap);
 
-
-            //Add usernames to page dynamically -- Change i < " " to count of users
-            //Can move this another method or class later
             showGroupMembersInGrid();
             AddPinOnLoad();
             InitTimer();
+            CheckForGroupUpdates();
         }
 
         private void showGroupMembersInGrid()
         {
+
             grdMembersGrid.Children.Clear();
+            grdMembersGrid.RowDefinitions.Clear();
             Button btnInvite = new Button();
             btnInvite.Text = "Invite to Group";
             btnInvite.BackgroundColor = Color.White;
             btnInvite.Clicked += BtnInvite_Clicked;
+            RowDefinition btnInviteRow = new RowDefinition();
+            grdMembersGrid.RowDefinitions.Add(btnInviteRow);
             grdMembersGrid.Children.Add(btnInvite, 0, 0);
+
             //Create a label for the current users username
             MyButton defaultUser = new MyButton();
             defaultUser.Text = Application.Current.Properties["savedUserName"].ToString();
@@ -134,10 +147,16 @@ namespace YouSee
             defaultUser.BackgroundColor = Color.Red;
             defaultUser.Image = "pin.png";
             defaultUser.Clicked += DefaultUser_Clicked;
+            RowDefinition defaultUserRow = new RowDefinition();
+            RowDefinition rowSpacer = new RowDefinition();
+            rowSpacer.Height = 1;
             BoxView boxView = new BoxView();
             BoxView boxSpace = new BoxView();
             boxView.BackgroundColor = Color.Red;
             boxSpace.HeightRequest = 1;
+            boxSpace.Color = Color.Black;
+            grdMembersGrid.RowDefinitions.Add(defaultUserRow);
+            grdMembersGrid.RowDefinitions.Add(rowSpacer);
             grdMembersGrid.Children.Add(boxView, 0, 1);
             grdMembersGrid.Children.Add(defaultUser, 0, 1);
             grdMembersGrid.Children.Add(boxSpace, 0, 2);
@@ -145,12 +164,12 @@ namespace YouSee
 
             for (int i = 0; i < usersInGroup.Count; i++)
             {
+                usersInGrid.Add(usersInGroup[i]);
                 //User to demonstrate adding multiple users to grid -- foreach user in group do something like this
                 MyButton groupMembers = new MyButton();
-                
+
                 //Change text to username
                 groupMembers.Text = usersInGroup[i];
-                groupMembers.Image = "pin" + i + ".png";
                 groupMembers.HorizontalOptions = LayoutOptions.FillAndExpand;
                 groupMembers.VerticalOptions = LayoutOptions.Center;
                 groupMembers.TextColor = Color.Black;
@@ -164,30 +183,37 @@ namespace YouSee
                 {
                     case 0:
                         membersBox.BackgroundColor = Color.FromHex("e67e22");
+                        groupMembers.Image = "pin" + 0;
                         caseSwitch++;
                         break;
                     case 1:
                         membersBox.BackgroundColor = Color.FromHex("2ecc71");
+                        groupMembers.Image = "pin" + 1;
                         caseSwitch++;
                         break;
                     case 2:
                         membersBox.BackgroundColor = Color.FromHex("f1c40f");
+                        groupMembers.Image = "pin" + 2;
                         caseSwitch++;
                         break;
                     case 3:
                         membersBox.BackgroundColor = Color.FromHex("3498db");
+                        groupMembers.Image = "pin" + 3;
                         caseSwitch++;
                         break;
                     case 4:
                         membersBox.BackgroundColor = Color.FromHex("9b59b6");
+                        groupMembers.Image = "pin" + 4;
                         caseSwitch++;
                         break;
                     case 5:
                         membersBox.BackgroundColor = Color.FromHex("79F648");
+                        groupMembers.Image = "pin" + 5;
                         caseSwitch++;
                         break;
                     case 6:
                         membersBox.BackgroundColor = Color.FromHex("36F3FF");
+                        groupMembers.Image = "pin" + 6;
                         caseSwitch = 0;
                         break;
                 }
@@ -202,8 +228,8 @@ namespace YouSee
                 spacerRow.Height = 1;
 
                 //Create a new row definition for new users
-                RowDefinition rowDefinition = new RowDefinition();
-                rowDefinition.Height = 55;
+                RowDefinition userNameRow = new RowDefinition();
+                userNameRow.Height = 55;
 
                 //Increment i by 1 with temp var to add spacer/spacerRow
                 int spacerRowIndex = i + 4;
@@ -216,14 +242,15 @@ namespace YouSee
                     userRowIndex += i;
                 }
                 //Foreach user -> Add username, add boxview/user to row i -> make another row to add the spacer before adding the next user
-                grdMembersGrid.RowDefinitions.Add(rowDefinition);
+                grdMembersGrid.RowDefinitions.Add(userNameRow);
                 grdMembersGrid.RowDefinitions.Add(spacerRow);
                 //index starts at 3 because row 0 is invite button, row 1 is default user
                 grdMembersGrid.Children.Add(membersBox, 0, userRowIndex);
                 grdMembersGrid.Children.Add(groupMembers, 0, userRowIndex);
                 grdMembersGrid.Children.Add(spacer, 0, spacerRowIndex);
 
-                countOfUsersInList = grdMembersGrid.RowDefinitions.Count / 2 - 1;
+                countOfUsersInGrid = 0;
+                countOfUsersInGrid = grdMembersGrid.RowDefinitions.Count / 2 - 1;
             }
         }
         
@@ -233,7 +260,7 @@ namespace YouSee
             customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), customMap.VisibleRegion.Radius));
         }
 
-        //Pan to the location of the clicked group member
+        //Pan to the location of the clicked group member -- WON'T WORK WITH NEW SCROLLVIEW
         private void GroupMembers_Clicked(object sender, EventArgs e)
         {
             var row = (int)((BindableObject)sender).GetValue(Grid.RowProperty);
@@ -268,6 +295,7 @@ namespace YouSee
             timerOn = true;
             AddPinOnLoad();
             InitTimer();
+            CheckForGroupUpdates();
         }
 
         //What to do when the page dissapears
@@ -306,15 +334,39 @@ namespace YouSee
                 Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
                 {
                     Device.BeginInvokeOnMainThread(() => AddPinsToMap());
-                    Device.BeginInvokeOnMainThread(() => usersInGroup = NetworkUtils.getUsers());
-                    countOfUsers = usersInGroup.Count;
-                    if(countOfUsers != countOfUsersInList)
-                    {
-                        showGroupMembersInGrid();
-                    }
-                    Console.WriteLine(timerOn);
+
                     return timerOn;
                 });
+        }
+
+        private void CheckForGroupUpdates()
+        {
+            int secondsInterval = 5;
+            Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
+            {
+                Device.BeginInvokeOnMainThread(() => usersInGroup = NetworkUtils.getUsers());
+                countOfUsers = usersInGroup.Count;
+                if (countOfUsers != countOfUsersInGrid)
+                {
+                    if (countOfUsers > countOfUsersInGrid)
+                    {
+                        //When a user joins
+                        IEnumerable<string> differenceQuery = usersInGroup.Except(usersInGrid);
+                        foreach (string s in differenceQuery)
+                        DisplayAlert("", s + " has joined the group!", "Ok");
+                    }
+                    if (countOfUsersInGrid > countOfUsers)
+                    {
+                        //When a user leaves
+                        IEnumerable<string> differenceQuery = usersInGrid.Except(usersInGroup);
+                        foreach (string s in differenceQuery)
+                            DisplayAlert("", s + " has left the group", "Ok");
+                    }
+                    showGroupMembersInGrid();
+                }
+
+                return timerOn;
+            });
         }
 
         //Add pins to map

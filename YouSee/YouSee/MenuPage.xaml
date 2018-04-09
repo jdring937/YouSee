@@ -40,7 +40,7 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <!---If you prefer a listView, the work is done... Just have to uncomment/recomment appropriate controls and method-->
+                    <!---If you prefer a listView, the work is done...-->
                     <Grid x:Name="grdDeleteBtns" RowSpacing="0"></Grid>
                     
                     <ListView x:Name="MyListView"
