@@ -109,7 +109,7 @@ namespace YouSee
                         sqlConn.Open();
                         try
                         {
-                            //Executes the stored procedure and returns the userID
+                            //Executes the stored procedure and returns the groupID
                             groupID = (int)command.ExecuteScalar();
                         }
                         catch (Exception exc)

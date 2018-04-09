@@ -39,11 +39,11 @@ namespace YouSee
 
         private void BtnBack_Clicked(object sender, EventArgs e)
         {
-            //CreatePage.createHamburgerIcon(new MainPage(), Application.Current.Properties["savedUserName"].ToString());
-            var otherPage = new MainPage { Title = Application.Current.Properties["savedUserName"].ToString() };
-            var homePage = App.navigationPage.Navigation.NavigationStack.First();
-            App.navigationPage.Navigation.InsertPageBefore(otherPage, homePage);
-            App.navigationPage.PopToRootAsync(false);
+            CreatePage.createHamburgerIcon(new MainPage(), Application.Current.Properties["savedUserName"].ToString());
+            //var otherPage = new MainPage { Title = Application.Current.Properties["savedUserName"].ToString() };
+            //var homePage = App.navigationPage.Navigation.NavigationStack.First();
+            //App.navigationPage.Navigation.InsertPageBefore(otherPage, homePage);
+            //App.navigationPage.PopToRootAsync(false);
         }
 
         //Insert the user into group

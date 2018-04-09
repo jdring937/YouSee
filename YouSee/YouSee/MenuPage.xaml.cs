@@ -305,7 +305,7 @@ namespace YouSee
             }
             else
             {
-                App.navigationPage.Navigation.PushAsync(new CreatePage());
+                App.navigationPage.Navigation.PushAsync(new CreatePage());           
             }
         }
 
