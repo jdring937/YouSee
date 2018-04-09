@@ -148,7 +148,7 @@ namespace YouSee
             }
             else
             {
-                App.navigationPage.Navigation.PushAsync(new ListViewPageJoin());
+                App.navigationPage.Navigation.PushAsync(new JoinPage());
             }
         }
 
