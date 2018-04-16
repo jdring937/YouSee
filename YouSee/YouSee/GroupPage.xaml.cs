@@ -37,14 +37,15 @@ namespace YouSee
             MenuPage.prevPage = groupName;
             setupPage();
             countOfUsers = usersInGroup.Count;
-            for(int i = 0; i < usersInGroup.Count; i++)
-            {
-                //Every user in the list now has associated properties
-                userIDs.Add(i);
-                userLats.Add(NetworkUtils.userLats[i]);
-                userLngs.Add(NetworkUtils.userLngs[i]);
-            }
-            myUsers= new User { userNames = new ObservableCollection<string>(usersInGroup), userID = userIDs, userLats = userLats, userLngs = userLngs };
+            //for(int i = 0; i < usersInGroup.Count; i++)
+            //{
+            //    //Every user in the list now has associated properties
+            //    userIDs.Add(i);
+            //    //Index out of range exception when joining a group
+            //    userLats.Add(NetworkUtils.userLats[i]);
+            //    userLngs.Add(NetworkUtils.userLngs[i]);
+            //}
+            //myUsers= new User { userNames = new ObservableCollection<string>(usersInGroup), userID = userIDs, userLats = userLats, userLngs = userLngs };
         }
 
         //Add the group member pins to map
