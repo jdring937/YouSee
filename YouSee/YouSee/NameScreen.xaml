@@ -11,18 +11,21 @@
         </Grid.RowDefinitions>
 
         <StackLayout Spacing="20" Padding="20" VerticalOptions="Center">
-            <Button x:Name="btnUsername" Text="Create a Username"></Button>
+            <Button x:Name="btnUsername" Text="Create a Username" BackgroundColor="Red" TextColor="Black"></Button>
+            <Label x:Name="lblUser" Text="Already a user? Click here to login."></Label>
+            <Button x:Name="btnLogin" Text="Login" BackgroundColor="Red" TextColor="Black"></Button>
             <Entry x:Name="entryName" Placeholder="Username" ></Entry>
-            <Label x:Name="lblNoUserName" FontSize="Large" Text="Invalid Username" IsVisible="False"></Label>
-        </StackLayout>
+            <Entry x:Name="entryPassword" Placeholder="Password" IsPassword="True"></Entry>
+            <Label x:Name="lblNoUserName" FontSize="Large" Text="Invalid Username" IsVisible="True"></Label>
 
+        </StackLayout>
     </Grid>
 
-    <ContentPage.Content>
+    <!--<ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Xamarin.Forms!"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
         </StackLayout>
-    </ContentPage.Content>
+    </ContentPage.Content>-->
 </ContentPage>

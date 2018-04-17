@@ -34,7 +34,6 @@ namespace YouSee
                 MainPage = new NameScreen();
             }
             //CreatePage.createHamburgerIcon();
-            //MainPage = new GroupPage();
 
         }
 
