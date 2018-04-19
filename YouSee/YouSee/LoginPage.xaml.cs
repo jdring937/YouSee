@@ -24,6 +24,7 @@ namespace YouSee
             {
                 int userID = NetworkUtils.Login(entUsername.Text, entPassword.Text);
                 AppProperties.setSavedUserId(userID);
+                AppProperties.saveUserName(entUsername.Text);
                 CreatePage.createHamburgerIcon(new MainPage(), entUsername.Text);
             }
             catch

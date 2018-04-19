@@ -1,4 +1,5 @@
 ﻿using Android;
+using Android.Locations;
 using Plugin.Geolocator;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace YouSee
             MenuPage.prevPage = groupName;
             setupPage();
             countOfUsers = usersInGroup.Count;
+
             //for(int i = 0; i < usersInGroup.Count; i++)
             //{
             //    //Every user in the list now has associated properties
@@ -46,6 +48,7 @@ namespace YouSee
             //    userLngs.Add(NetworkUtils.userLngs[i]);
             //}
             //myUsers= new User { userNames = new ObservableCollection<string>(usersInGroup), userID = userIDs, userLats = userLats, userLngs = userLngs };
+
         }
 
         //Add the group member pins to map
@@ -331,11 +334,13 @@ namespace YouSee
         //Every 5 seconds, retrieve users location
         public void InitTimer()
         {
-                int secondsInterval = 5;
+                double secondsInterval = 5;
                 Device.StartTimer(TimeSpan.FromSeconds(secondsInterval), () =>
                 {
-                    Device.BeginInvokeOnMainThread(() => AddPinsToMap());
-
+                    if (timerOn == true)
+                    {
+                        Device.BeginInvokeOnMainThread(() => AddPinsToMap());                   
+                    }
                     return timerOn;
                 });
         }
