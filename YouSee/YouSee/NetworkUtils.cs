@@ -32,7 +32,7 @@ namespace YouSee
         }
 
         //Insert new users into DB
-        public static int insertUser(String userIP, String userName)
+        public static int insertUser(String userIP, String userName, String password)
         {
             int userID = 0;
             String connString = @"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18";
@@ -43,6 +43,7 @@ namespace YouSee
                     String spName = "insertUser";
                     String passUserName = "@userName";
                     String passUserIP = "@userIP";
+                    String passPassword = "@userPassword";
 
                     using (SqlCommand command = sqlConn.CreateCommand())
                     {
@@ -50,23 +51,26 @@ namespace YouSee
                         command.CommandText = spName;
                         command.Parameters.Add(new SqlParameter(passUserIP, userIP));
                         command.Parameters.Add(new SqlParameter(passUserName, userName));
+                        command.Parameters.Add(new SqlParameter(passPassword, password));
 
                         sqlConn.Open();
                         try
                         {
                             //Executes the stored procedure and returns the userID
                             userID = (int)command.ExecuteScalar();
+                            AppProperties.setSavedUserId(userID);
                         }
                         catch (Exception exc)
                         {
                             Console.WriteLine(exc.Message);
+                            userID = 0;
                         }
                         finally
                         {
                             sqlConn.Close();
                         }
                     }
-                }
+                }               
             }
             catch (Exception ex)
             {
@@ -74,7 +78,7 @@ namespace YouSee
             }
             //App.Current.Properties.Add("savedUserID", userID);
             //Console.WriteLine(App.Current.Properties["savedUserID"]);
-            AppProperties.setSavedUserId(userID);
+            
             return userID;
         }//end InsertDB
 
@@ -526,6 +530,48 @@ namespace YouSee
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        public static int Login(String username, String password)
+        {
+            //store username and password
+            String MyUsername = username;
+            String MyPassword = password;
+            int numResult;
+            int userID = 0;
+
+            //search query
+            string query = "SELECT UserID FROM dbo.tUsers WHERE(userName = N'" + username + "') AND(userPassword = '" + password + "')";
+
+            //connect
+            SqlConnection conn = new SqlConnection(@"Server=youseedatabase.cxj5odskcws0.us-east-2.rds.amazonaws.com,1433;DataBase=yousee;User ID=youseeDatabase; Password=yousee18");
+
+            SqlCommand command = new SqlCommand(query, conn);
+
+            try
+            {
+                SqlDataAdapter daSearchGroups = new SqlDataAdapter(command);
+                DataTable dtReturnedGroups = new DataTable();
+                daSearchGroups.Fill(dtReturnedGroups);
+                numResult = dtReturnedGroups.Rows.Count;
+
+                for (int i = 0; i < numResult; i++)
+                {
+                    DataRow dr = dtReturnedGroups.Rows[i];
+                    userID = Convert.ToInt32(dr["UserID"]);
+                }
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine(e);               
+            }
+            finally
+            {
+                command.Connection.Close();
+            }
+
+            return userID;
         }
 
         //This works! Connects xamarin app to ms sql DB... Template Method

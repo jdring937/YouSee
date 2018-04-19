@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YouSee.LoginPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Enter your username and password"
+                VerticalOptions="Center"
+                HorizontalOptions="Center" TextColor="Black" FontSize="20"/>
+            <Entry x:Name="entUsername" Placeholder="Username"></Entry>
+            <Entry x:Name="entPassword" Placeholder="Password"  IsPassword="True"></Entry>
+            <Button x:Name="btnSubmit" Text="Submit" BackgroundColor="Red" TextColor="Black"></Button>
+            <Label x:Name="lblError" IsVisible="False"></Label>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

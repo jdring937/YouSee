@@ -68,15 +68,31 @@ namespace YouSee
             int userId = 0;
 
             //Should not need an if statement if everything else works the way it should... User should only be prompted to enter this value once
-            App.Current.Properties.Add("savedUserID", userID);
-            userId = (int)App.Current.Properties["savedUserID"];
+            if (Application.Current.Properties.ContainsKey("savedUserID"))
+            {
+                Application.Current.Properties.Remove("savedUserID");
+                Application.Current.Properties.Add("savedUserID", userID);
+            }
+            else
+            {
+                App.Current.Properties.Add("savedUserID", userID);
+                userId = (int)App.Current.Properties["savedUserID"];
+            }
             return userId;
         }
 
         //Save the username to a persistent variable
         public static async void saveUserName(String userName)
         {
-            App.Current.Properties.Add("savedUserName", userName);
+            if (Application.Current.Properties.ContainsKey("savedUserName"))
+            {
+                Application.Current.Properties.Remove("savedUserName");
+                App.Current.Properties.Add("savedUserName", userName);
+            }
+            else
+            {
+                App.Current.Properties.Add("savedUserName", userName);
+            }
             await App.Current.SavePropertiesAsync();
         }
 

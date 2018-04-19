@@ -20,12 +20,19 @@ namespace YouSee
 		{
 			InitializeComponent ();
             btnUsername.Clicked += btnUsername_Clicked;
+            btnLogin.Clicked += BtnLogin_Clicked;
+        }
+
+        private void BtnLogin_Clicked(object sender, EventArgs e)
+        {
+            App.Current.MainPage = new LoginPage();
         }
 
         //Add the user to the DB
         private void btnUsername_Clicked(object sender, EventArgs e)
         {
-            String userName = entryName.Text;
+            //String userName = entryName.Text;
+            //String password = entryPassword.Text;
             //Make sure the user entered a username
             if (string.IsNullOrWhiteSpace(entryName.Text))
             {
@@ -35,23 +42,32 @@ namespace YouSee
             {
                 //Insert user in DB and save username
                 insertUser();
-                AppProperties.saveUserName(entryName.Text);
-
-                string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                string filename = Path.Combine(path, "YouSee.txt");
-
-                using (var streamWriter = new StreamWriter(filename, false))
+                if (userID == 0)
                 {
-                    streamWriter.WriteLine(entryName.Text);
+                    lblNoUserName.Text = "That user name already exists. Please choose a different username.";
+                    lblNoUserName.IsVisible = true;
                 }
-
-                using (var streamReader = new StreamReader(filename))
+                else
                 {
-                    string content = streamReader.ReadToEnd();
-                    System.Diagnostics.Debug.WriteLine(content);
+                    AppProperties.saveUserName(entryName.Text);
+
+                    string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    string filename = Path.Combine(path, "YouSee.txt");
+
+                    using (var streamWriter = new StreamWriter(filename, false))
+                    {
+                        streamWriter.WriteLine(entryName.Text);
+                    }
+
+                    using (var streamReader = new StreamReader(filename))
+                    {
+                        string content = streamReader.ReadToEnd();
+                        System.Diagnostics.Debug.WriteLine(content);
+                    }
+                    //Launch MainPage
+
+                    CreatePage.createHamburgerIcon(new MainPage(), Application.Current.Properties["savedUserName"].ToString());
                 }
-                //Launch MainPage
-                CreatePage.createHamburgerIcon(new MainPage(), Application.Current.Properties["savedUserName"].ToString());
             }
         }
 
@@ -60,9 +76,10 @@ namespace YouSee
         {
             String ipAddress = NetworkUtils.GetLocalIPAddress();
             String userName = entryName.Text;
+            String password = entryPassword.Text;
             //Executes SP and returns userID
             Console.WriteLine(userName);
-            userID = NetworkUtils.insertUser(ipAddress, userName);
+                userID = NetworkUtils.insertUser(ipAddress, userName, password);           
         }
 
         ////Save the username to a persistent variable
