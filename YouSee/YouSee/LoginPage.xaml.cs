@@ -16,20 +16,37 @@ namespace YouSee
 		{
 			InitializeComponent ();
             btnSubmit.Clicked += BtnSubmit_Clicked;
+            btnBack.Clicked += BtnBack_Clicked;
 		}
 
+        //Go back to create user screen
+        private void BtnBack_Clicked(object sender, EventArgs e)
+        {
+            App.Current.MainPage = new NameScreen();
+        }
+
+        //Login
         private void BtnSubmit_Clicked(object sender, EventArgs e)
         {
-            try
+            if (String.IsNullOrEmpty(entPassword.Text) || String.IsNullOrEmpty(entUsername.Text))
             {
-                int userID = NetworkUtils.Login(entUsername.Text, entPassword.Text);
-                AppProperties.setSavedUserId(userID);
-                AppProperties.saveUserName(entUsername.Text);
-                CreatePage.createHamburgerIcon(new MainPage(), entUsername.Text);
+                lblError.Text = "Please enter your credentials first.";
+                lblError.IsVisible = true;
             }
-            catch
+            else
             {
-                lblError.Text = "Something went wrong. Please make sure your username and password are correct.";
+                    int userID = NetworkUtils.Login(entUsername.Text, entPassword.Text);
+                    if(userID == 0)
+                    {
+                        lblError.Text = "Not a valid username and password.";
+                        lblError.IsVisible = true;
+                    }
+                    else
+                    {
+                        AppProperties.setSavedUserId(userID);
+                        AppProperties.saveUserName(entUsername.Text);
+                        CreatePage.createHamburgerIcon(new MainPage(), entUsername.Text);
+                    }
             }
         }
     }

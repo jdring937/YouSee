@@ -9,12 +9,12 @@ using Xamarin.Forms.Xaml;
 
 namespace YouSee
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class JoinPage : ContentPage
-	{
-		public JoinPage ()
-		{
-			InitializeComponent ();
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class JoinPage : ContentPage
+    {
+        public JoinPage()
+        {
+            InitializeComponent();
             entInviteCode.TextChanged += EntInviteCode_TextChanged;
             btnSubmit.Clicked += BtnSubmit_Clicked;
             btnBack.Clicked += BtnBack_Clicked;
@@ -35,7 +35,7 @@ namespace YouSee
             {
                 btnBack.IsVisible = false;
             }
-		}
+        }
 
         private void BtnBack_Clicked(object sender, EventArgs e)
         {
@@ -53,42 +53,34 @@ namespace YouSee
             int groupID = NetworkUtils.getGroupIdFromGroupCode(groupCode);
             int userID = (int)Application.Current.Properties["savedUserID"];
             Console.WriteLine(NetworkUtils.groupsDictionary.Count);
-            if (NetworkUtils.groupsDictionary.Keys.Contains(groupID))
+            if(groupID == 0)
+            {
+                lblError.Text = "Something went wrong. Please make sure the group code you entered was correct.";
+                lblError.IsVisible = true;
+            }
+            else if (NetworkUtils.groupsDictionary.Keys.Contains(groupID))
             {
                 lblError.Text = "You are already a member of that group.";
                 lblError.IsVisible = true;
             }
-            else 
+            else
             {
                 String groupName = NetworkUtils.getGroupNameFromGroupCode(groupCode);
-                //if (NetworkUtils.groupsDictionary.Values.Contains(groupName))
-                //{
-                //    lblError.Text = "You are already a member of a group with that name.";
-                //}
-                //else
-                //{
-                    try
-                    {
-                        //Add the dictionary to the app properties
-                        NetworkUtils.groupsDictionary.Add(groupID, groupName);
-                        AppProperties.setGroupsDictionary();
-                        NetworkUtils.insertIntoGroup(groupID, userID);
-                    }
-                    catch (Exception ex)
-                    {
-                        lblError.Text = "You are already a member of that group";
-                        lblError.IsVisible = true;
-                    }
-                    AppProperties.setCurrentGroup(groupName);
-                    AppProperties.setCurrentGroupId(groupID);
-                    CreatePage.createHamburgerIcon(new GroupPage(), groupName);
-
-                    //Display error label if code was wrong
-                    if (groupID == 0)
-                    {
-                        lblError.IsVisible = true;
-                    }
-                //}
+                try
+                {
+                    //Add the dictionary to the app properties
+                    NetworkUtils.groupsDictionary.Add(groupID, groupName);
+                    AppProperties.setGroupsDictionary();
+                    NetworkUtils.insertIntoGroup(groupID, userID);
+                }
+                catch (Exception ex)
+                {
+                    lblError.Text = "You are already a member of that group";
+                    lblError.IsVisible = true;
+                }
+                AppProperties.setCurrentGroup(groupName);
+                AppProperties.setCurrentGroupId(groupID);
+                CreatePage.createHamburgerIcon(new GroupPage(), groupName);
             }
         }
 
@@ -97,17 +89,17 @@ namespace YouSee
         {
             int maxLength = 8;
             String entText = entInviteCode.Text;
-            if(entText.Length == maxLength)
+            if (entText.Length == maxLength)
             {
                 btnSubmit.BackgroundColor = Color.Red;
-                btnSubmit.IsEnabled = true;                
+                btnSubmit.IsEnabled = true;
             }
-            if(entText.Length > maxLength)
+            if (entText.Length > maxLength)
             {
                 entText = entText.Remove(entText.Length - 1);
                 entInviteCode.Text = entText;
             }
         }
 
-	}
+    }
 }

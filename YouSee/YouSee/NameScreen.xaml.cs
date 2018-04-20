@@ -37,6 +37,13 @@ namespace YouSee
             if (string.IsNullOrWhiteSpace(entryName.Text))
             {
                 lblNoUserName.IsVisible = true;
+            }else if(string.IsNullOrEmpty(entryPassword.Text) ){
+                lblNoUserName.Text = "You must enter a password";
+                lblNoUserName.IsVisible = true;
+            }else if(entryPassword.Text != entryPassword2.Text)
+            {
+                lblNoUserName.Text = "Passwords do not match.";
+                lblNoUserName.IsVisible = true;
             }
             else
             {

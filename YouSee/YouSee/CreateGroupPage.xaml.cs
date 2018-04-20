@@ -10,33 +10,26 @@ using Xamarin.Forms.Xaml;
 
 namespace YouSee
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class CreatePage : ContentPage
-	{        
-		public CreatePage ()
-		{
-			InitializeComponent ();
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class CreatePage : ContentPage
+    {
+        public CreatePage()
+        {
+            InitializeComponent();
             btnCreateGroup.Clicked += BtnCreateGroup_Clicked;
             btnBack.Clicked += BtnBack_Clicked;
             Dictionary<int, String> userGroups = NetworkUtils.getUserGroups();
-            if(MenuPage.pageCount <= 1 && userGroups.Count < 1)
+            if (MenuPage.pageCount <= 1 && userGroups.Count < 1)
             {
                 btnBack.IsVisible = true;
             }
-            //if (MenuPage.prevPage == null || MenuPage.prevPage == "")
-            //{
-            //    btnBack.IsVisible = true;
-            //}
-            //else if (MenuPage.prevPage == Application.Current.Properties["savedUserName"].ToString())
-            //{
-            //    btnBack.IsVisible = true;
-            //}
             else
             {
                 btnBack.IsVisible = false;
             }
         }
 
+        //
         private void BtnBack_Clicked(object sender, EventArgs e)
         {
             CreatePage.createHamburgerIcon(new MainPage(), Application.Current.Properties["savedUserName"].ToString());
@@ -46,63 +39,34 @@ namespace YouSee
         private void BtnCreateGroup_Clicked(object sender, EventArgs e)
         {
             String groupName = txtGroupName.Text;
-            //Dictionary<int, String> tempGroupDict = NetworkUtils.getUserGroups();
-            ////List<String> tempGroupList = NetworkUtils.getUserGroups();
-            //if (tempGroupDict.Values.Contains(groupName))
-            //{
-            //    btnSameName.IsVisible = true;
-            //}
-            //else
-            //{
+            Dictionary<int, String> tempGroupDict = NetworkUtils.getUserGroups();
+            //List<String> tempGroupList = NetworkUtils.getUserGroups();
+            if (tempGroupDict.Values.Contains(groupName))
+            {
+                lblError.Text = "You are already a member of a group with that name.";
+                lblError.IsVisible = true;
+            }
+            else if (!String.IsNullOrEmpty(txtGroupName.Text))
+            {
+                groupName = txtGroupName.Text;
                 String groupCode = RandomString();
                 String hostid = Application.Current.Properties["savedUserID"].ToString();
-                ////Overwrite the groupName if it already exists
-                //if (Application.Current.Properties.ContainsKey("savedGroupName"))
-                //{
-                //    Application.Current.Properties.Remove("savedGroupName");
-                //    Application.Current.Properties.Add("savedGroupName", groupName);
-                //}
-                //else
-                //{
-                //    Application.Current.Properties.Add("savedGroupName", groupName);
-                //}
                 AppProperties.setSavedGroupName(groupName);
                 int hostID = Convert.ToInt32(hostid);
                 int groupID = NetworkUtils.insertGroup(groupName, groupCode, hostID);
                 AppProperties.setCurrentGroupId(groupID);
-
-                //AppProperties.setGroupsDictionary();
-                ////Add the dictionary to the app properties
                 NetworkUtils.groupsDictionary.Add(groupID, groupName);
-                
-                //if (Application.Current.Properties.ContainsKey("groupsDictionary"))
-                //{
-                //    Application.Current.Properties.Remove("groupsDictionary");
-                //    Application.Current.Properties.Add("groupsDictionary", NetworkUtils.groupsDictionary);
-                //}
-                //else
-                //{
-                //Application.Current.Properties.Add("groupsDictionary", NetworkUtils.groupsDictionary);
-                //}
-
-                //Updates the menupage and creates new nav stack
-                //createHamburgerIcon();
-                //if (Application.Current.Properties.ContainsKey("currentGroup"))
-                //{
-                //    Application.Current.Properties.Remove("currentGroup");
-                //    Application.Current.Properties.Add("currentGroup", Application.Current.Properties["savedGroupName"]);
-                //}
-                //else
-                //{
-                //    Application.Current.Properties.Add("currentGroup", Application.Current.Properties["savedGroupName"]);
-                //}
                 AppProperties.setCurrentGroup(Application.Current.Properties["savedGroupName"].ToString());
                 createHamburgerIcon(new GroupPage(), Application.Current.Properties["savedGroupName"].ToString());
-
-            //}
+            }
+            else
+            {
+                lblError.Text = "You must enter a group name.";
+                lblError.IsVisible = true;
+            }
         }
 
-        //Create new Random String
+        //Create new Random String and insert into DB
         //https://stackoverflow.com/questions/1344221/how-can-i-generate-random-alphanumeric-strings-in-c
         private static System.Random random = new System.Random();
         public static string RandomString()
@@ -131,17 +95,6 @@ namespace YouSee
             }
 
             AppProperties.setSavedGroupCode(finalString);
-            ////Save the group code. Overwrite it if it exists already
-            //if (Application.Current.Properties.ContainsKey("savedGroupCode"))
-            //{
-            //    Application.Current.Properties.Remove("savedGroupCode");
-            //    Application.Current.Properties.Add("savedGroupCode", finalString);
-            //}
-            //else
-            //{
-            //    Application.Current.Properties.Add("savedGroupCode", finalString);
-            //}
-
             return finalString;
         }//RandomString
 
