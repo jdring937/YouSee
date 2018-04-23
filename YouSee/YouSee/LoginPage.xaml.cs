@@ -9,15 +9,15 @@ using Xamarin.Forms.Xaml;
 
 namespace YouSee
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class LoginPage : ContentPage
-	{
-		public LoginPage ()
-		{
-			InitializeComponent ();
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class LoginPage : ContentPage
+    {
+        public LoginPage()
+        {
+            InitializeComponent();
             btnSubmit.Clicked += BtnSubmit_Clicked;
             btnBack.Clicked += BtnBack_Clicked;
-		}
+        }
 
         //Go back to create user screen
         private void BtnBack_Clicked(object sender, EventArgs e)
@@ -35,18 +35,26 @@ namespace YouSee
             }
             else
             {
-                    int userID = NetworkUtils.Login(entUsername.Text, entPassword.Text);
-                    if(userID == 0)
+                int userID = NetworkUtils.Login(entUsername.Text, entPassword.Text);
+                if (userID == 0)
+                {
+                    lblError.Text = "Not a valid username and password.";
+                    lblError.IsVisible = true;
+                }
+                else
+                {
+                    AppProperties.setSavedUserId(userID);
+                    AppProperties.saveUserName(entUsername.Text);
+                    if (Application.Current.Properties.ContainsKey("currentGroupID"))
                     {
-                        lblError.Text = "Not a valid username and password.";
-                        lblError.IsVisible = true;
+                        String groupName = Application.Current.Properties["currentGroup"].ToString();
+                        CreatePage.createHamburgerIcon(new GroupPage(), groupName);
                     }
                     else
                     {
-                        AppProperties.setSavedUserId(userID);
-                        AppProperties.saveUserName(entUsername.Text);
                         CreatePage.createHamburgerIcon(new MainPage(), entUsername.Text);
                     }
+                }
             }
         }
     }

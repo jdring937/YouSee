@@ -33,7 +33,6 @@ namespace YouSee
             {
                 MainPage = new NameScreen();
             }
-            //CreatePage.createHamburgerIcon();
 
         }
 

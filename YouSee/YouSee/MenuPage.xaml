@@ -8,7 +8,7 @@
             <!-- Main grid that contains sub grids -->
             <Grid x:Name="grdNavMenu" RowSpacing="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="150"></RowDefinition>
+                    <RowDefinition Height="75"></RowDefinition>
                     <!--- Row for header info -->
                     <RowDefinition Height="55"></RowDefinition>
                     <!---Row for buttons grid -->
@@ -19,18 +19,22 @@
                 </Grid.RowDefinitions>
 
                 <!-- Grid for the create and join buttons-->
-                <Grid Grid.Row="1" ColumnSpacing="-5">
+                <Grid Grid.Row="0" ColumnSpacing="-5" RowSpacing="-5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width=".5*"></ColumnDefinition>
+                        <ColumnDefinition Width="1"></ColumnDefinition>
                         <ColumnDefinition Width=".5*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-
-                    <Button x:Name="btnCreateSm" Text="Create" Grid.Column="0" BackgroundColor="Black" TextColor="White"></Button>
-                    <Button x:Name="btnJoinSm" Text="Join" Grid.Column="1" BackgroundColor="Black" TextColor="White"></Button>
+                    <BoxView BackgroundColor="Red" Grid.Column="0" Grid.ColumnSpan="3"></BoxView>
+                    <Button x:Name="btnCreateSm" Text="Create" Grid.Column="0" BackgroundColor="Red" TextColor="White"></Button>
+                    <Button x:Name="btnJoinSm" Text="Join" Grid.Column="2" BackgroundColor="Red" TextColor="White"></Button>
+                    <BoxView Grid.Column="1" BackgroundColor="White"></BoxView>
                 </Grid>
+                <BoxView BackgroundColor="Black" Grid.Row="1"></BoxView>
+                <Button x:Name="btnLogout" BackgroundColor="Black" Text="Logout" TextColor="White" Grid.Row="1"></Button>
 
                 <!---Spacer -->
-                <BoxView Grid.Row="2" BackgroundColor="Black"></BoxView>
+                <BoxView Grid.Row="2" BackgroundColor="SlateGray"></BoxView>
 
                 <!---Grid for groups and delete buttons -->
                 <Grid x:Name="grdGroups" Grid.Row="3" ColumnSpacing="0" RowSpacing="0" x:FieldModifier="static" BackgroundColor="White">

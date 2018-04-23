@@ -40,6 +40,7 @@ namespace YouSee
             InitializeComponent();
             btnCreateSm.Clicked += BtnCreateSm_Clicked;
             btnJoinSm.Clicked += btnJoinSm_Clicked;
+            btnLogout.Clicked += BtnLogout_Clicked;
             getUserGroups();
             setupPage();
             //If using a list view
@@ -47,8 +48,15 @@ namespace YouSee
             Console.WriteLine(prevPage);
         }
 
+        private void BtnLogout_Clicked(object sender, EventArgs e)
+        {
+            Application.Current.Properties.Remove("currentGroupID");
+            Application.Current.Properties.Remove("savedUserName");
+            App.Current.MainPage = new LoginPage();
+        }
+
         //I can populate the grid with dictionary values, but I don't know how to get the dictionary to persist while updating values
-        
+
         //Populates the page with the groups the user belongs to
         private void getUserGroups()
         {
@@ -113,7 +121,7 @@ namespace YouSee
 
                     //Add the row definitions for the group names and the spacer bar between groups
                     grdGroups.RowDefinitions.Add(groupRow[i]);
-                    grdGroups.RowDefinitions.Add(groupSpacerRow[i]);
+                    grdGroups.RowDefinitions.Add(groupSpacerRow[i]);                    
 
                     ////Add everything to the page
                     //grdGroups.Children.Add(groupBoxView[i], groupCol, groupRowIndex);
@@ -123,6 +131,7 @@ namespace YouSee
                     grdGroups.Children.Add(deleteBoxView[i], delBtnCol, groupRowIndex);
                     grdGroups.Children.Add(deleteBtns[i], delBtnCol, groupRowIndex);
                 }
+
                 //Set the selected group name button color
                 if (Application.Current.Properties.ContainsKey("currentGroupID"))
                 {
@@ -199,7 +208,7 @@ namespace YouSee
                 AppProperties.setCurrentGroup(groupName[row].Text);
                 AppProperties.setCurrentGroupId(groupSelectedID);
                 CreatePage.createHamburgerIcon(new GroupPage(), groupName[row].Text);
-                //TODO: Open that group page with the groupName in title bar
+
             }
             else
             {
@@ -208,7 +217,6 @@ namespace YouSee
                 AppProperties.setCurrentGroup(groupName[row / 2].Text);
                 AppProperties.setCurrentGroupId(groupSelectedID);
                 CreatePage.createHamburgerIcon(new GroupPage(), groupName[row / 2].Text);
-                //TODO: Open that group page with the groupName in title bar
             }
         }
 
@@ -257,6 +265,7 @@ namespace YouSee
                 {
                     groupToDelete = myGroups[row / 2];
                     GroupIdToDelete = userGroups.ElementAt(row / 2).Key;
+                    //THROWS ERROR IF CURRENT GROUP ID IS NULL - only happens if trying to delete group after fresh install before user selects a current group
                     if ((int)Application.Current.Properties["currentGroupID"] == GroupIdToDelete)
                     {
                         AppProperties.setCurrentGroupId(userGroups.ElementAt(row / 2 - 1).Key);
