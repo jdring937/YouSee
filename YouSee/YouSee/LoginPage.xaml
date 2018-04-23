@@ -4,6 +4,7 @@
              x:Class="YouSee.LoginPage">
     <ContentPage.Content>
         <StackLayout>
+            <Button x:Name="btnBack" Text="Back" BackgroundColor="Black" TextColor="White"></Button>
             <Label Text="Enter your username and password"
                 VerticalOptions="Center"
                 HorizontalOptions="Center" TextColor="Black" FontSize="20"/>

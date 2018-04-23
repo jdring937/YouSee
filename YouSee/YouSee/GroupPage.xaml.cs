@@ -261,10 +261,17 @@ namespace YouSee
         //Pan to users current location on click
         private void DefaultUser_Clicked(object sender, EventArgs e)
         {
-            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), customMap.VisibleRegion.Radius));
+            try
+            {
+                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(lat, lng), customMap.VisibleRegion.Radius));
+            }
+            catch
+            {
+                Console.WriteLine("Broke for no reason");
+            }
         }
 
-        //Pan to the location of the clicked group member -- WON'T WORK WITH NEW SCROLLVIEW
+        //Pan to the location of the clicked group member
         private void GroupMembers_Clicked(object sender, EventArgs e)
         {
             var row = (int)((BindableObject)sender).GetValue(Grid.RowProperty);
@@ -275,7 +282,14 @@ namespace YouSee
             {
                 memberLat = NetworkUtils.userLats[0];
                 memberLng = NetworkUtils.userLngs[0];
-                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(memberLat, memberLng), customMap.VisibleRegion.Radius));
+                try
+                {
+                    customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(memberLat, memberLng), customMap.VisibleRegion.Radius));
+                }
+                catch
+                {
+                    Console.WriteLine("Broke for no reason");
+                }
             }
             else
             {               
@@ -287,7 +301,14 @@ namespace YouSee
                         int index = row - startingRow;
                         memberLat = NetworkUtils.userLats[index];
                         memberLng = NetworkUtils.userLngs[index];
-                        customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(memberLat, memberLng), customMap.VisibleRegion.Radius));
+                        try
+                        {
+                            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(memberLat, memberLng), customMap.VisibleRegion.Radius));
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Why does Xamarin hate me");
+                        }
                     }
                 }
             }
